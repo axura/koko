@@ -1,0 +1,19 @@
+below is a list of online webisites used for this assignment
+
+SQLite tutorials:
+http://zetcode.com/db/sqlite/
+http://zetcode.com/db/sqlitepythontutorial/
+
+this is more useful:
+http://www.tutorialspoint.com/sqlite/sqlite_python.htm
+(Thank you, Yilser)
+
+also google: learn python the hard way. do exercises up to exercise 10
+
+http://www.w3schools.com/sql/sql_drop.asp
+
+regex in python:
+http://www.pythonforbeginners.com/systems-programming/regular-expressions-in-python/
+
+
+
