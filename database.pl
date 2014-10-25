@@ -32,8 +32,7 @@ my $rv = $dbh->do($stmt);
 if($rv < 0){
    print $DBI::errstr;
 } else {
-   #print "Table created successfully\n";
-#	$x = 1;
+   print "Table created successfully\n";
 }
 
 #opening up all the usernames in students folder. 
@@ -41,25 +40,64 @@ opendir $students_folder, 'students' or die "couldn't open folder students";
 
 @folders = readdir $students_folder;
 
+sub oneItemfield{
+	my $entry = $line;
+	$entry = $lines[$file_index + 1];
+	chomp($entry);
+	$entry =~ s/^\s*//ig;
+	return $entry;
+}
+
+sub multiItemfield{
+	my $entry = $lines[$file_index];
+	return $entry;
+
+}
+
 foreach $user (@folders){
+	#check if it is a valid username, otherwise go to next folder
 	if ($user =~ /^[^a-z0-9].*$/ig){
 		next;
 	}
-
+	@insert = [];
 	$file_location = "students/".$user."/profile.txt";
 
 	open(File, "$file_location") or die "cannot open the profile text for $user\n";
 	@lines = <File>;
 	$file_index = 0;
 	foreach $line (@lines){
-		if ($line =~ /password/i){
-			$password = $lines[$file_index+1];
-			chomp($password);
-			$password =~ s/^\s*//ig;
+		if ($line =~ /^password:/i){
+			$insert_field = &oneItemfield();
+			$password = $insert_field;
 		}
+		elsif ($line =~ /^name:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^degree:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^height:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^brithdate:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^weight:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^gender:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^hair_colour:/i){
+			$insert_field = &oneItemfield();
+		}
+#		elsif ($line =~ /^degree:/i){
+#			$degree = &oneItemfield();
+#		}
+		push( @insert, $insert_field);
 		$file_index += 1;
 	}
-#	print "$user:\t\t$password\n";
+	print "$user:\t\t$password\n";
 	close(File);
 }
 closedir $students_folder;
