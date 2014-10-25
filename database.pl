@@ -74,7 +74,7 @@ sub multiItemfield{
 #	chomp($listOfEntries);
 #	$listOfEntries =~ s/^/\'/i;	
 #	$listOfEntries =~ s/$/\'/i;
-	print "$listOfEntries\n";
+#	print "$listOfEntries\n";
 	return $listOfEntries;
 }
 
@@ -123,9 +123,11 @@ foreach $user (@folders){
 			$insert_field = &oneItemfield();
 		}
 		#check if it is a multiline field 
-		elsif (($line =~ /^[a-z].*:$/i) || ($line =~ /favourite/i)) {
-			print "multiline field $line";
+		elsif (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
+#			print "multiline field $line";
 			$insert_field = &multiItemfield();
+			$curr_field = $1;
+			print "$curr_field: $insert_field\n";
 		}
 
 		push( @insert, $insert_field);
