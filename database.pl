@@ -100,6 +100,24 @@ foreach $user (@folders){
 
 	close(File);
 
+	#inserting information for that user into the sqlite3 table
+	$stmt = qq(INSERT INTO USERS 
+		(name, username, password,
+		degree, height, birthdate,
+		favourite_hobbies, weight, favourite_TV_shows, 
+		favourite_movies, email,courses,
+		gender, hair_colour,favourite_books)
+
+		VALUES
+		('$table_entries{"name"}', '$table_entries{"username"}',
+		 '$table_entries{"password"}','$table_entries{"degree"}',
+		 '$table_entries{"height"}','$table_entries{"birthdate"}',
+		 '$table_entries{"favourite_hobbies"}', '$table_entries{"weight"}',
+		 '$table_entries{"favourite_TV_shows"}', '$table_entries{"favourite_movies"}', 			 '$table_entries{"email"}', '$table_entries{"courses"}',
+		 '$table_entries{"gender"}', '$table_entries{"hair_colour"}',
+		 '$table_entries{"favourite_books"}')
+	);
+	$rv = $dbh->do($stmt)# or die $DBI::errstr;
 }
 closedir $students_folder;
 
