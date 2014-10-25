@@ -24,9 +24,21 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 #creating a new table and setting the fields
 my $stmt = qq(CREATE TABLE USERS
       (ID INT PRIMARY KEY     NOT NULL,
-       NAME           TEXT    NOT NULL,
+       name           TEXT    NOT NULL,
        username       TEXT    NOT NULL,
-       password       TEXT	NOT NULL
+       password       TEXT	NOT NULL,
+	   degree			TEXT	NOT NULL,
+       height           TEXT    NOT NULL,
+       birthdate           TEXT    NOT NULL,
+       favourite_hobbies           TEXT    NOT NULL,
+       weight           TEXT    NOT NULL,
+       favourite_TV_shows           TEXT    NOT NULL,
+       favourite_movies     TEXT    NOT NULL,
+       email           TEXT    NOT NULL,
+       courses           TEXT    NOT NULL,
+       gender           TEXT    NOT NULL,
+       hair_colour           TEXT    NOT NULL,
+       favourite_books           TEXT    NOT NULL
       ););
 my $rv = $dbh->do($stmt);
 if($rv < 0){
@@ -67,7 +79,8 @@ foreach $user (@folders){
 	if ($user =~ /^[^a-z0-9].*$/ig){
 		next;
 	}
-	@insert = [];
+#	@insert = [];
+	%table_entries = ();
 	$file_location = "students/".$user."/profile.txt";
 
 	open(File, "$file_location") or die "cannot open the profile text for $user\n";
@@ -76,17 +89,17 @@ foreach $user (@folders){
 	$file_index = 0;
 	foreach $line (@lines){
 		if (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
-#			print "multiline field $line";
 			$insert_field = &multiItemfield();
 			$curr_field = $1;
-			print "$curr_field: $insert_field\n";
+#			print "$curr_field: $insert_field\n";
 		}
 
-		push( @insert, $insert_field);
+		$table_entries{$curr_field} = $insert_field;
 		$file_index += 1;
 	}
-	#print "$user:\t\t$password\n";
+
 	close(File);
+
 }
 closedir $students_folder;
 
