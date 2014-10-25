@@ -53,15 +53,28 @@ sub oneItemfield{
 
 sub multiItemfield{
 	my $entry = $line;
-	$listOfEntries = $entry;
+	my @items = [];
 	my $index = $file_index+1;
+	$listOfEntries = "";
 #	print "$index, $length, $line";
 	while (($index < $length) && ($lines[$index] =~ /^\t/i)){
 		$entry = $lines[$index];
 		chomp($entry);
-		print "$entry\n";
+		$entry =~ s/^\s*//i;
+		push(@items, $entry);
+		if ($index != ($file_index +1)){
+			$listOfEntries = $listOfEntries.',@'.$entry;
+		} else {
+			$listOfEntries = $entry;
+		}
 		$index += 1;
 	}
+	
+#	$listOfEntries = join(',', @items);
+#	chomp($listOfEntries);
+#	$listOfEntries =~ s/^/\'/i;	
+#	$listOfEntries =~ s/$/\'/i;
+	print "$listOfEntries\n";
 	return $listOfEntries;
 }
 
@@ -78,6 +91,9 @@ foreach $user (@folders){
 	$length = @lines;
 	$file_index = 0;
 	foreach $line (@lines){
+		if ($line =~ /^username/i){
+			$next;
+		}
 		if ($line =~ /^password:/i){
 			$insert_field = &oneItemfield();
 #			$password = $insert_field;
@@ -101,6 +117,9 @@ foreach $user (@folders){
 			$insert_field = &oneItemfield();
 		}
 		elsif ($line =~ /^hair_colour:/i){
+			$insert_field = &oneItemfield();
+		}
+		elsif ($line =~ /^email:/i){
 			$insert_field = &oneItemfield();
 		}
 		#check if it is a multiline field 
