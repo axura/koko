@@ -40,17 +40,6 @@ opendir $students_folder, 'students' or die "couldn't open folder students";
 
 @folders = readdir $students_folder;
 
-sub oneItemfield{
-	my $entry = $line;
-	if ($file_index < $length){
-		$entry = $lines[$file_index + 1];
-		chomp($entry);
-		$entry =~ s/^\s*//ig;
-		$entry =~ s/'/&#8216/ig;
-	}
-	return $entry;
-}
-
 sub multiItemfield{
 	my $entry = $line;
 	my @items = [];
@@ -70,11 +59,6 @@ sub multiItemfield{
 		$index += 1;
 	}
 	
-#	$listOfEntries = join(',', @items);
-#	chomp($listOfEntries);
-#	$listOfEntries =~ s/^/\'/i;	
-#	$listOfEntries =~ s/$/\'/i;
-#	print "$listOfEntries\n";
 	return $listOfEntries;
 }
 
@@ -91,39 +75,7 @@ foreach $user (@folders){
 	$length = @lines;
 	$file_index = 0;
 	foreach $line (@lines){
-		if ($line =~ /^username/i){
-			$next;
-		}
-		if ($line =~ /^password:/i){
-			$insert_field = &oneItemfield();
-#			$password = $insert_field;
-		}
-		elsif ($line =~ /^name:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^degree:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^height:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^brithdate:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^weight:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^gender:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^hair_colour:/i){
-			$insert_field = &oneItemfield();
-		}
-		elsif ($line =~ /^email:/i){
-			$insert_field = &oneItemfield();
-		}
-		#check if it is a multiline field 
-		elsif (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
+		if (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
 #			print "multiline field $line";
 			$insert_field = &multiItemfield();
 			$curr_field = $1;
