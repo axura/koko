@@ -7,7 +7,7 @@
 #It will then save the changes to the database and close before running the cgi program
 
 use DBI;
-use strict;
+#use strict;
 
 #setting up the connection to the database, or initialising if the table is not created
 
@@ -19,7 +19,7 @@ my $password = "";
 my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 }) 
                       or die $DBI::errstr;
 
-print "Opened database successfully\n";
+#print "Opened database successfully\n";
 
 #creating a new table and setting the fields
 my $stmt = qq(CREATE TABLE USERS
@@ -32,16 +32,35 @@ my $rv = $dbh->do($stmt);
 if($rv < 0){
    print $DBI::errstr;
 } else {
-   print "Table created successfully\n";
+   #print "Table created successfully\n";
+#	$x = 1;
 }
 
 #opening up all the usernames in students folder. 
-opendir my $students_folder, 'students' or die "couldn't open folder students";
+opendir $students_folder, 'students' or die "couldn't open folder students";
 
-my @folders = readdir $students_folder;
+@folders = readdir $students_folder;
 
-foreach my $user (@folders){
-	print "$user\n";
+foreach $user (@folders){
+	if ($user =~ /^[^a-z0-9].*$/ig){
+		next;
+	}
+
+	$file_location = "students/".$user."/profile.txt";
+
+	open(File, "$file_location") or die "cannot open the profile text for $user\n";
+	@lines = <File>;
+	$file_index = 0;
+	foreach $line (@lines){
+		if ($line =~ /password/i){
+			$password = $lines[$file_index+1];
+			chomp($password);
+			$password =~ s/^\s*//ig;
+		}
+		$file_index += 1;
+	}
+#	print "$user:\t\t$password\n";
+	close(File);
 }
 closedir $students_folder;
 
