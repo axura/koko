@@ -26,7 +26,7 @@ my $stmt = qq(CREATE TABLE USERS
       (ID INT PRIMARY KEY     NOT NULL,
        NAME           TEXT    NOT NULL,
        username       TEXT    NOT NULL,
-       password       TEXT	  NOT NULL
+       password       TEXT	NOT NULL
       ););
 my $rv = $dbh->do($stmt);
 if($rv < 0){
@@ -42,16 +42,27 @@ opendir $students_folder, 'students' or die "couldn't open folder students";
 
 sub oneItemfield{
 	my $entry = $line;
-	$entry = $lines[$file_index + 1];
-	chomp($entry);
-	$entry =~ s/^\s*//ig;
+	if ($file_index < $length){
+		$entry = $lines[$file_index + 1];
+		chomp($entry);
+		$entry =~ s/^\s*//ig;
+		$entry =~ s/'/&#8216/ig;
+	}
 	return $entry;
 }
 
 sub multiItemfield{
-	my $entry = $lines[$file_index];
-	return $entry;
-
+	my $entry = $line;
+	$listOfEntries = $entry;
+	my $index = $file_index+1;
+#	print "$index, $length, $line";
+	while (($index < $length) && ($lines[$index] =~ /^\t/i)){
+		$entry = $lines[$index];
+		chomp($entry);
+		print "$entry\n";
+		$index += 1;
+	}
+	return $listOfEntries;
 }
 
 foreach $user (@folders){
@@ -64,11 +75,12 @@ foreach $user (@folders){
 
 	open(File, "$file_location") or die "cannot open the profile text for $user\n";
 	@lines = <File>;
+	$length = @lines;
 	$file_index = 0;
 	foreach $line (@lines){
 		if ($line =~ /^password:/i){
 			$insert_field = &oneItemfield();
-			$password = $insert_field;
+#			$password = $insert_field;
 		}
 		elsif ($line =~ /^name:/i){
 			$insert_field = &oneItemfield();
@@ -91,13 +103,16 @@ foreach $user (@folders){
 		elsif ($line =~ /^hair_colour:/i){
 			$insert_field = &oneItemfield();
 		}
-#		elsif ($line =~ /^degree:/i){
-#			$degree = &oneItemfield();
-#		}
+		#check if it is a multiline field 
+		elsif (($line =~ /^[a-z].*:$/i) || ($line =~ /favourite/i)) {
+			print "multiline field $line";
+			$insert_field = &multiItemfield();
+		}
+
 		push( @insert, $insert_field);
 		$file_index += 1;
 	}
-	print "$user:\t\t$password\n";
+	#print "$user:\t\t$password\n";
 	close(File);
 }
 closedir $students_folder;
