@@ -14,7 +14,7 @@ if (-e "students.db"){
 	#print "database already exists. No need to initialise\n";
 	exit(0);
 }
-pr
+
 my $driver   = "SQLite"; 
 my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
@@ -126,3 +126,4 @@ foreach $user (@folders){
 closedir $students_folder;
 
 $dbh->disconnect();
+exit(0);

@@ -3,7 +3,6 @@
 # written by andrewt@cse.unsw.edu.au September 2013
 # as a starting point for COMP2041/9041 assignment 2
 # http://cgi.cse.unsw.edu.au/~cs2041/assignments/LOVE2041/
-#this is a testing line
 
 use CGI qw/:all/;
 use CGI::Carp qw(fatalsToBrowser warningsToBrowser);
@@ -12,7 +11,7 @@ use List::Util qw/min max/;
 warningsToBrowser(1);
 
 #attempting to run the program database.pl
-my $status = system("./database.pl");
+$status = system("./database.pl");
 
 # print start of HTML ASAP to assist debugging if there is an error in the script
 print page_header();
@@ -50,11 +49,10 @@ sub browse_screen {
 #
 sub page_header {
 	return header,
-   		start_html("-title"=>"LOVE2041", -bgcolor=>"#FEDCBA"),
+   		start_html("-title"=>"LOVE2041", -bgcolor=>"#B0E0E6"),
  		center(h2(i("LOVE2041")));
 }
 
-#
 # HTML placed at bottom of every screen
 # It includes all supplied parameter values as a HTML comment
 # if global variable $debug is set
