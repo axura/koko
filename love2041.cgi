@@ -11,6 +11,9 @@ use Data::Dumper;
 use List::Util qw/min max/;
 warningsToBrowser(1);
 
+#attempting to run the program database.pl
+my $status = system("./database.pl");
+
 # print start of HTML ASAP to assist debugging if there is an error in the script
 print page_header();
 
