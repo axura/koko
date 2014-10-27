@@ -11,10 +11,10 @@ use DBI;
 
 #setting up the connection to the database, or initialising if the table is not created
 if (-e "students.db"){
-	print "database already exists. No need to initialise\n";
+	#print "database already exists. No need to initialise\n";
 	exit(0);
 }
-
+pr
 my $driver   = "SQLite"; 
 my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
@@ -102,8 +102,6 @@ foreach $user (@folders){
 			push(@fields, $curr_field);
 			push(@values, $insert_field);
 #			printf "%s: %s\n", $curr_field, $table_entries{$curr_field};			
-#			$stmt = qq(INSERT INTO USERS ($curr_field) VALUES ($insert_field ););
-#			$rv = $dbh->do($stmt) or die $DBI::errstr;
 		}
 		$file_index += 1;
 		$curr_field = undef;
@@ -124,7 +122,7 @@ foreach $user (@folders){
 
 	#inserting information for that user into the sqlite3 table
 }
-print "inserted all of the information from profiles without problems\n";
+#print "inserted all of the information from profiles without problems\n";
 closedir $students_folder;
 
 $dbh->disconnect();
