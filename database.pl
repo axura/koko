@@ -10,6 +10,10 @@ use DBI;
 #use strict;
 
 #setting up the connection to the database, or initialising if the table is not created
+if (-e "students.db"){
+	print "database already exists. No need to initialise\n";
+	exit(0);
+}
 
 my $driver   = "SQLite"; 
 my $database = "students.db";
@@ -44,9 +48,9 @@ my $stmt = qq(CREATE TABLE USERS
 my $rv = $dbh->do($stmt);
 if($rv < 0){
    print $DBI::errstr;
-} else {
-   print "Table created successfully\n";
-}
+} #else {
+  # print "Table created successfully\n";
+#}
 
 #opening up all the usernames in students folder. 
 opendir $students_folder, 'students' or die "couldn't open folder students";
