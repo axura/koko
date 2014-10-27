@@ -23,22 +23,22 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 
 #creating a new table and setting the fields
 my $stmt = qq(CREATE TABLE USERS
-      (ID INT PRIMARY KEY     NOT NULL,
-       name           TEXT    NOT NULL,
-       username       TEXT    NOT NULL,
-       password       TEXT	NOT NULL,
-	   degree			TEXT	NOT NULL,
-       height           TEXT    NOT NULL,
-       birthdate           TEXT    NOT NULL,
-       favourite_hobbies           TEXT    NOT NULL,
-       weight           TEXT    NOT NULL,
-       favourite_TV_shows           TEXT    NOT NULL,
-       favourite_movies     TEXT    NOT NULL,
-       email           TEXT    NOT NULL,
-       courses           TEXT    NOT NULL,
-       gender           TEXT    NOT NULL,
-       hair_colour           TEXT    NOT NULL,
-       favourite_books           TEXT    NOT NULL
+      (ID INT PRIMARY KEY,
+       name           TEXT,
+       username       TEXT,
+       password       TEXT,
+	   degree		  TEXT,
+       height           TEXT,
+       birthdate           TEXT,
+       favourite_hobbies           TEXT,
+       weight           TEXT,
+       favourite_TV_shows           TEXT,
+       favourite_movies     TEXT,
+       email           TEXT,
+       courses           TEXT,
+       gender           TEXT    ,
+       hair_colour           TEXT,
+       favourite_books           TEXT
       ););
 my $rv = $dbh->do($stmt);
 if($rv < 0){
@@ -54,7 +54,7 @@ opendir $students_folder, 'students' or die "couldn't open folder students";
 
 sub multiItemfield{
 	my $entry = $line;
-	my @items = [];
+	my @items = ();
 	my $index = $file_index+1;
 	$listOfEntries = "";
 #	print "$index, $length, $line";
@@ -62,15 +62,11 @@ sub multiItemfield{
 		$entry = $lines[$index];
 		chomp($entry);
 		$entry =~ s/^\s*//i;
+		$entry =~ s/'/\&\#8216/ig;
 		push(@items, $entry);
-		if ($index != ($file_index +1)){
-			$listOfEntries = $listOfEntries.',@'.$entry;
-		} else {
-			$listOfEntries = $entry;
-		}
 		$index += 1;
 	}
-	
+	$listOfEntries = join(",@", @items);
 	return $listOfEntries;
 }
 
@@ -91,33 +87,22 @@ foreach $user (@folders){
 		if (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
 			$insert_field = &multiItemfield();
 			$curr_field = $1;
-#			print "$curr_field: $insert_field\n";
+			print "$curr_field: $insert_field\n";
 		}
+		if (defined($curr_field) && defined($insert_field)){
+			$table_entries{$curr_field} = $insert_field;
+#			$stmt = qq(INSERT INTO USERS ($curr_field) VALUES ($insert_field ););
+#			$rv = $dbh->do($stmt) or die $DBI::errstr;
 
-		$table_entries{$curr_field} = $insert_field;
+		}	
 		$file_index += 1;
+		$curr_field = undef;
+		$insert_field = undef;
 	}
 
 	close(File);
 
 	#inserting information for that user into the sqlite3 table
-	$stmt = qq(INSERT INTO USERS 
-		(name, username, password,
-		degree, height, birthdate,
-		favourite_hobbies, weight, favourite_TV_shows, 
-		favourite_movies, email,courses,
-		gender, hair_colour,favourite_books)
-
-		VALUES
-		('$table_entries{"name"}', '$table_entries{"username"}',
-		 '$table_entries{"password"}','$table_entries{"degree"}',
-		 '$table_entries{"height"}','$table_entries{"birthdate"}',
-		 '$table_entries{"favourite_hobbies"}', '$table_entries{"weight"}',
-		 '$table_entries{"favourite_TV_shows"}', '$table_entries{"favourite_movies"}', 			 '$table_entries{"email"}', '$table_entries{"courses"}',
-		 '$table_entries{"gender"}', '$table_entries{"hair_colour"}',
-		 '$table_entries{"favourite_books"}')
-	);
-	$rv = $dbh->do($stmt)# or die $DBI::errstr;
 }
 closedir $students_folder;
 
