@@ -12,7 +12,7 @@ use DBI;
 #setting up the connection to the database, or initialising if the table is not created
 
 my $driver   = "SQLite"; 
-my $database = "test.db";
+my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
 my $userid = "";
 my $password = "";
@@ -38,7 +38,8 @@ my $stmt = qq(CREATE TABLE USERS
        courses           TEXT,
        gender           TEXT    ,
        hair_colour           TEXT,
-       favourite_books           TEXT
+       favourite_books           TEXT,
+	   favourite_bands		TEXT
       ););
 my $rv = $dbh->do($stmt);
 if($rv < 0){
@@ -78,6 +79,9 @@ foreach $user (@folders){
 #	@insert = [];
 	%table_entries = ();
 	$file_location = "students/".$user."/profile.txt";
+	#strings passed into the insert instruciton for SQL
+	@fields = ();
+	@values = ();
 
 	open(File, "$file_location") or die "cannot open the profile text for $user\n";
 	@lines = <File>;
@@ -87,23 +91,36 @@ foreach $user (@folders){
 		if (($line =~ /^([_a-z].*):$/i) || ($line =~ /favourite/i)) {
 			$insert_field = &multiItemfield();
 			$curr_field = $1;
-			print "$curr_field: $insert_field\n";
+#			print "$curr_field: $insert_field\n";
 		}
 		if (defined($curr_field) && defined($insert_field)){
 			$table_entries{$curr_field} = $insert_field;
+			push(@fields, $curr_field);
+			push(@values, $insert_field);
+#			printf "%s: %s\n", $curr_field, $table_entries{$curr_field};			
 #			$stmt = qq(INSERT INTO USERS ($curr_field) VALUES ($insert_field ););
 #			$rv = $dbh->do($stmt) or die $DBI::errstr;
-
-		}	
+		}
 		$file_index += 1;
 		$curr_field = undef;
 		$insert_field = undef;
 	}
 
+		$id_string = join(",", @fields);
+		$value_string = join("', '", @values);
+		$value_string = "'".$value_string."'";	
+		$stmt = qq(INSERT INTO USERS ($id_string) VALUES ($value_string ););
+		$rv = $dbh->do($stmt) or die $DBI::errstr;
+	
+		
+#printf "%s: %s\n", $id_string, $value_string;
+
+
 	close(File);
 
 	#inserting information for that user into the sqlite3 table
 }
+print "inserted all of the information from profiles without problems\n";
 closedir $students_folder;
 
 $dbh->disconnect();
