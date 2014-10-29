@@ -11,6 +11,9 @@ use List::Util qw/min max/;
 use DBI;
 warningsToBrowser(1);
 
+@display_fields = ["name","gender", "height", "birthdate","weight", "degree", "favourite_hobbies", "favourite_books","favourite_TV_shows", "favourite_movies", "favourite_bands"];
+
+
 #attempting to run the program database.pl, setting up the connection to the database
 $status = system("./database.pl");
 
@@ -27,8 +30,11 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 # some globals used through the script
 $debug = 1;
 $students_dir = "./students";
+#print browse_screen();
 
-print browse_screen();
+my $display_profile = &display_profile();
+print "\n<p>\n$display_profile\n</p>\n</body>";
+
 print page_trailer();
 exit 0;	
 
@@ -51,6 +57,31 @@ sub browse_screen {
 		end_form, "\n",
 		p, "\n";
 }
+
+sub display_profile{
+
+	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="GeekGirl42";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+
+	my $index = 0;
+	my @row = $sth->fetchrow_array();
+	my $length = @row;
+	my $profile = "";
+	while ($index < $length){
+		if (defined($row[$index])){
+			$row[$index] =~ s/,@/\n/ig;
+			$profile =$profile.$row[$index]."\n";
+		}
+		$index += 1;
+	}
+	return $profile;
+}
+
+
 
 #
 # HTML placed at bottom of every screen
@@ -94,11 +125,13 @@ sub page_header {
 sub page_trailer {
 	my $html = "";
 	$html .= join("", map("<!-- $_=".param($_)." -->\n", param())) if $debug;
-	$html .= end_html;
+	
+	#$html .= end_html;
 	print "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
 	print "<script src=\"js/bootstrap.min.js\"></script>\n";
 	print "  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
     <script src=\"../../dist/js/bootstrap.min.js\"></script>
     <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>";
+	$html .= end_html;
 	return $html;
 }
