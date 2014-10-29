@@ -17,22 +17,17 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 print "Opened database successfully\n";
 
 my $stmt = qq(SELECT username from USERS);
+my @user_column = ();
 
 my $sth = $dbh->prepare( $stmt );	
 	my $rv = $sth->execute() or die $DBI::errstr;
 	if($rv < 0){
 		print $DBI::errstr;
 	}
-	my @user_column= $sth->fetchrow_array();
+	@user_column=$sth->fetchall_arrayref();
 
-	my $n = 3;
+	my $student = "GeekGirl42"; 
 
-	print 	$user_column[0],"\n";
-#	print 	$user_column[1],"\n";
-#	print 	$user_column[2],"\n";
-	
-	
-foreach my $student (@user_column){
 	print "----------------------------$student------------------------------\n";
 
 	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="$student";);
@@ -45,17 +40,15 @@ foreach my $student (@user_column){
 	my $index = 0;
 	my @row = $sth->fetchrow_array();
 	my $length = @row;
-	foreach my $entry (@row){	
-		$index = 0;
-		while ($index < $length){
-			if (defined($row[$index])){
-				$row[$index] =~ s/,@/\n/ig;
-				#print "$index: $row[$index]\n";
-			}
-		$index +=1;
+	my $profile = "";
+	while ($index < $length){
+		if (defined($row[$index])){
+			$row[$index] =~ s/,@/\n/ig;
+			$profile =$profile.$row[$index]."\n";
 		}
+		$index += 1;
 	}
-	print "finished\n";
-}
+	print "$profile";
+
 
 	
