@@ -57,47 +57,6 @@ sub browse_screen {
 }
 
 sub show_profile{
-	my $display_profile = &display_profile();
-	print "<p>$display_profile</p></body>\n";
-}
-
-sub display_profile{
-	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="GeekGirl42";);
-	$sth = $dbh->prepare( $stmt );	
-	$rv = $sth->execute() or die $DBI::errstr;
-	if($rv < 0){
-		print $DBI::errstr;
-	}
-
-	my $index = 0;
-	my @row = $sth->fetchrow_array();
-	my $length = @row;
-	my $profile = "";
-	while ($index < $length){
-		if (defined($row[$index])){
-			if ($row[$index] =~ /,@/ig){
-				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
-				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<p>".$row[$index]."</p>"."\n";
-			} else {
-				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<p>".$row[$index]."</p>"."\n";
-			}
-		}
-		$index += 1;
-	}
-	return $profile;
-}
-
-
-
-#
-# HTML placed at bottom of every screen
-#
-sub page_header {
-	print header,
-   		start_html("-title"=>"LOVE2041"); #-bgcolor=>"#B0E0E6");
-		print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    	print "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\">\n";
-	print "<title>UNSW 2041 Friend searcher</title>";
 	print "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
       <div class=\"container\">
         <div class=\"navbar-header\">
@@ -122,6 +81,47 @@ sub page_header {
         </div><!--/.navbar-collapse -->
       </div>
     </div>";
+	my $display_profile = &display_profile();
+	print "<p>$display_profile</p></body>\n";
+}
+
+sub display_profile{
+	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="GeekGirl42";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+
+	my $index = 0;
+	my @row = $sth->fetchrow_array();
+	my $length = @row;
+	my $profile = "";
+	while ($index < $length){
+		if (defined($row[$index])){
+			if ($row[$index] =~ /,@/ig){
+				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
+				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<ul>".$row[$index]."</ul>"."\n";
+			} else {
+				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<ul>".$row[$index]."</ul>"."\n";
+			}
+		}
+		$index += 1;
+	}
+	return $profile;
+}
+
+
+
+#
+# HTML placed at bottom of every screen
+#
+sub page_header {
+	return header,
+   		start_html("-title"=>"UNSW LOVE2041"); #-bgcolor=>"#B0E0E6");
+		print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    	print "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\">\n";
+		print "<title>UNSW 2041 Friend searcher</title>";
 }
 
 # HTML placed at bottom of every screen
@@ -135,9 +135,9 @@ sub page_trailer {
 	#$html .= end_html;
 	print "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
 	print "<script src=\"js/bootstrap.min.js\"></script>\n";
-	print "  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
-    <script src=\"../../dist/js/bootstrap.min.js\"></script>
-    <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>";
+#	print "  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
+#    <script src=\"../../dist/js/bootstrap.min.js\"></script>
+#    <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>";
 	$html .= end_html;
 	return $html;
 }
