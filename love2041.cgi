@@ -60,21 +60,18 @@ sub page_header {
    		start_html("-title"=>"LOVE2041"); #-bgcolor=>"#B0E0E6");
 		print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
     	print "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\">\n";
-#	print "<button type=\"button\" class=\"btn btn-default btn-lg\">
-#		<span class=\"glyphicon glyphicon-star\"></span> Message 
-#		</button>";
 	print "<title>UNSW 2041 Friend searcher</title>";
-	print " <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
+	print "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
       <div class=\"container\">
         <div class=\"navbar-header\">
-          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">
-            <span class=\"sr-only\">Toggle navigation</span>
-            <span class=\"icon-bar\"></span>
-            <span class=\"icon-bar\"></span>
-            <span class=\"icon-bar\"></span>
-          </button>
-	          <a class=\"navbar-brand\" href=\"#\">2041 Friend Searcher</a>
-        </div>
+	  <a class=\"navbar-brand\" href=\"#\">2041 Friend Searcher</a>
+            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">
+              <span class=\"sr-only\">Sign Up</span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+            </button>
+          </div>
         <div class=\"navbar-collapse collapse\">
           <form class=\"navbar-form navbar-right\" role=\"form\">
             <div class=\"form-group\">
@@ -100,5 +97,8 @@ sub page_trailer {
 	$html .= end_html;
 	print "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
 	print "<script src=\"js/bootstrap.min.js\"></script>\n";
+	print "  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
+    <script src=\"../../dist/js/bootstrap.min.js\"></script>
+    <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>";
 	return $html;
 }
