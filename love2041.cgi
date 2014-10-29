@@ -11,7 +11,7 @@ use List::Util qw/min max/;
 use DBI;
 warningsToBrowser(1);
 
-@display_fields = ["name","gender", "height", "birthdate","weight", "degree", "favourite_hobbies", "favourite_books","favourite_TV_shows", "favourite_movies", "favourite_bands"];
+my @display_fields = ("name","gender", "height", "birthdate","weight", "degree", "favourite_hobbies", "favourite_books","favourite_TV_shows", "favourite_movies", "favourite_bands");
 
 
 #attempting to run the program database.pl, setting up the connection to the database
@@ -30,10 +30,8 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 # some globals used through the script
 $debug = 1;
 $students_dir = "./students";
-#print browse_screen();
 
-my $display_profile = &display_profile();
-print "\n<p>\n$display_profile\n</p>\n</body>";
+&show_profile();
 
 print page_trailer();
 exit 0;	
@@ -58,8 +56,12 @@ sub browse_screen {
 		p, "\n";
 }
 
-sub display_profile{
+sub show_profile{
+	my $display_profile = &display_profile();
+	print "<p>$display_profile</p></body>\n";
+}
 
+sub display_profile{
 	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="GeekGirl42";);
 	$sth = $dbh->prepare( $stmt );	
 	$rv = $sth->execute() or die $DBI::errstr;
@@ -73,8 +75,12 @@ sub display_profile{
 	my $profile = "";
 	while ($index < $length){
 		if (defined($row[$index])){
-			$row[$index] =~ s/,@/\n/ig;
-			$profile =$profile.$row[$index]."\n";
+			if ($row[$index] =~ /,@/ig){
+				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
+				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<p>".$row[$index]."</p>"."\n";
+			} else {
+				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<p>".$row[$index]."</p>"."\n";
+			}
 		}
 		$index += 1;
 	}
