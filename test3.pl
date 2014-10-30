@@ -23,4 +23,17 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 
 my @students = glob("$students_dir/*");
 
+for my $student (@students){
+	$student =~ s/.\/students\///ig;
+	print $student,"\n";
+}
 
+open (F, "navbar.txt") or die "cannot open navbar.txt";
+my @html_lines = <F>;
+my $html_code = "";
+foreach $line (@html_lines){
+	$html_code = $html_code.$line."\n";
+}
+
+print "\npriting html code ---------------------------------\n";
+print "$html_code\n";
