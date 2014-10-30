@@ -5,6 +5,9 @@
 use DBI;
 use strict;
 
+my @display_fields = ("name","gender", "height", "birthdate","weight", "degree", "favourite_hobbies", "favourite_books","favourite_TV_shows", "favourite_movies", "favourite_bands");
+
+
 my $status = system("./database.pl");
 
 my $driver   = "SQLite";
@@ -16,7 +19,7 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
                       or die $DBI::errstr;
 print "Opened database successfully\n";
 
-my $stmt = qq(SELECT username from USERS);
+my $stmt = qq(SELECT * from USERS);
 my @user_column = ();
 
 my $sth = $dbh->prepare( $stmt );	
@@ -24,8 +27,14 @@ my $sth = $dbh->prepare( $stmt );
 	if($rv < 0){
 		print $DBI::errstr;
 	}
-	@user_column=$sth->fetchall_arrayref();
+	my $column= $sth->fetchrow_array();
+	@user_column = split("\n", $column);
+	#@user_column=$sth->fetchall_arrayref();
 
+	foreach my $user (@user_column){
+		print "$user\n";
+	}
+=begin comment
 	my $student = "GeekGirl42"; 
 
 	print "----------------------------$student------------------------------\n";
@@ -50,5 +59,10 @@ my $sth = $dbh->prepare( $stmt );
 	}
 	print "$profile";
 
-
-	
+$length = @display_fields;
+$index = 0;
+while ($index < $length){
+	print "$display_fields[$index]\n";
+	$index += 1;
+}
+=end comment	
