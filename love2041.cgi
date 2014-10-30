@@ -31,8 +31,13 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 $debug = 1;
 $students_dir = "./students";
 
-&show_profile();
+$state = param('state') || "profile";
 
+if ($state eq "profile"){
+	&show_profile();
+} else {
+	&show_users();
+}
 print page_trailer();
 exit 0;	
 
@@ -108,7 +113,24 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
-	#$n
+	open (F, "navbar.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+
+	print "<div class=\"row\">
+  <div class=\"col-xs-6 col-md-3\">
+    <a href=\"#\" class=\"thumbnail\">
+    </a>
+  </div>
+  <center>Thumbnail</center>
+  
+</div>";
 
 }
 
@@ -121,7 +143,7 @@ sub display_profile{
 	my $student_to_show  = $students[$n];
 	$student_to_show =~ s/\.\/students\///ig;
 
-	print "  <div style=\"margin-top: 70px\">
+	print "	<div style=\"margin-top: 70px\">
 	<div style=\"margin-left:50px\">
 	<div class=\"panel panel-default\" style=\"width:350px\">
     <div align=\"middle\" class=\"panel-heading\">
