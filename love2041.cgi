@@ -83,15 +83,30 @@ sub show_profile{
     </div>";
 	my $display_profile = &display_profile();
 	print "<p>$display_profile</p></body>\n";
+
 }
 
 sub display_profile{
-	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="GeekGirl42";);
+	my $n = param('n') || 0;
+	my @students = glob("$students_dir/*");
+	$n = min(max($n, 0), $#students);
+	param('n', $n + 1);
+	my $student_to_show  = $students[$n];
+	$student_to_show =~ s/\.\/students\///ig;
+
+	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="$student_to_show";);
 	$sth = $dbh->prepare( $stmt );	
 	$rv = $sth->execute() or die $DBI::errstr;
 	if($rv < 0){
 		print $DBI::errstr;
 	}
+
+	print p,
+		start_form,"\n",
+		submit("Message"),"\n",
+		hidden('n', $n + 1),
+		end_form,"\n",
+		p,"\n";
 
 	my $index = 0;
 	my @row = $sth->fetchrow_array();
@@ -108,6 +123,7 @@ sub display_profile{
 		}
 		$index += 1;
 	}
+
 	return $profile;
 }
 
