@@ -57,33 +57,30 @@ sub browse_screen {
 }
 
 sub show_profile{
-	print "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
+	print "    <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
       <div class=\"container\">
         <div class=\"navbar-header\">
-	  <a class=\"navbar-brand\" href=\"#\">2041 Friend Searcher</a>
-            <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">
-              <span class=\"sr-only\">Sign Up</span>
-              <span class=\"icon-bar\"></span>
-              <span class=\"icon-bar\"></span>
-              <span class=\"icon-bar\"></span>
-            </button>
-          </div>
-        <div class=\"navbar-collapse collapse\">
-          <form class=\"navbar-form navbar-right\" role=\"form\">
-            <div class=\"form-group\">
-              <input type=\"text\" placeholder=\"Email\" class=\"form-control\">
-            </div>
-            <div class=\"form-group\">
-              <input type=\"password\" placeholder=\"Password\" class=\"form-control\">
-            </div>
-            <button type=\"submit\" class=\"btn btn-success\">Sign in</button>
-          </form>
-        </div><!--/.navbar-collapse -->
+          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">
+            <span class=\"sr-only\">Toggle navigation</span>
+            <span class=\"icon-bar\"></span>
+            <span class=\"icon-bar\"></span>
+            <span class=\"icon-bar\"></span>
+          </button>
+          <a class=\"navbar-brand\" href=\"#\">Project name</a>
+        </div>
+        <div id=\"navbar\" class=\"collapse navbar-collapse\">
+          <ul class=\"nav navbar-nav\">
+            <li class=\"active\"><a href=\"#\">Home</a></li>
+            <li><a href=\"#about\">About</a></li>
+            <li><a href=\"#contact\">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
       </div>
-    </div>";
+    </div>\n";
+#	print "<div class=\"jumbotron\"><div class=\"container\">\n";
 	my $display_profile = &display_profile();
-	print "<p>$display_profile</p></body>\n";
-
+	print "<p>$display_profile</p>\n";
+#	print "</div>\n";
 }
 
 sub display_profile{
@@ -133,11 +130,11 @@ sub display_profile{
 # HTML placed at bottom of every screen
 #
 sub page_header {
-	return header,
+	print header,
    		start_html("-title"=>"UNSW LOVE2041"); #-bgcolor=>"#B0E0E6");
 		print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
     	print "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\">\n";
-		print "<title>UNSW 2041 Friend searcher</title>";
+		#print "<title>UNSW 2041 Friend searcher</title>";
 }
 
 # HTML placed at bottom of every screen
