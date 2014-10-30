@@ -11,7 +11,7 @@ use List::Util qw/min max/;
 use DBI;
 warningsToBrowser(1);
 
-my @display_fields = ("name","gender", "height", "birthdate","weight", "degree", "favourite_hobbies", "favourite_books","favourite_TV_shows", "favourite_movies", "favourite_bands");
+my @display_fields = ("name","gender", "height", "birthdate","weight", "degree", "favourite hobbies", "favourite books","favourite TV shows", "favourite movies", "favourite bands");
 
 
 #attempting to run the program database.pl, setting up the connection to the database
@@ -67,13 +67,26 @@ sub show_profile{
 	print "$html_code";
 	close F;
 
-	my $display_profile = &display_profile();
-	print "	<div class=\"panel panel-primary\">
+	my @panels = &display_profile();
+	my $general = $panels[0];
+	my $interest = $panels[1];
+
+	#my $display_profile = &display_profile();
+	print "	<div class=\"panel panel-primary\" style=\"width:400px\">
   	<div class=\"panel-heading\">
       <h3 class=\"panel-title\">Personal Info</h3>
   	</div>
     <div class=\"panel-body\">
-	  <p class=\"text-info\">$display_profile</p>
+	  <p class=\"text-info\">$general</p>
+  	</div>
+  </div>";
+
+	print "	<div class=\"panel panel-primary\" style=\"width:400px\">
+  	<div class=\"panel-heading\">
+      <h3 class=\"panel-title\">Interests</h3>
+  	</div>
+    <div class=\"panel-body\">
+	  <p class=\"text-info\">$interest</p>
   	</div>
   </div>";
 	#print "<p class=\"text-info\">$display_profile</p>\n";
@@ -123,19 +136,24 @@ sub display_profile{
 	my @row = $sth->fetchrow_array();
 	my $length = @row;
 	my $profile = "";
+	my $interest = "";
+	my @panel_info = ();
 	while ($index < $length){
 		if (defined($row[$index])){
 			if ($row[$index] =~ /,@/ig){
-				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
-				$profile = $profile."<h4><b>".$display_fields[$index]."</b></h4>"."<ul>".$row[$index]."</ul>"."\n";
+				$row[$index] =~ s/,@/<p>\n<\/p>/ig;				
+				$interest = $interest."<h5><b>".$display_fields[$index]."</b></h5>"."<ul>".$row[$index]."</ul>"."\n";
 			} else {
-				$profile = $profile."<h4>".$display_fields[$index]."</h4>"."<ul>".$row[$index]."</ul>"."\n";
+				$profile = $profile."<h5><b>".$display_fields[$index]."</b></h5>"."<ul>".$row[$index]."</ul>"."\n";
 			}
 		}
 		$index += 1;
 	}
+	
+	push(@panel_info, $profile);
+	push(@panel_info, $interest);
 
-	return $profile;
+	return @panel_info;
 }
 
 
