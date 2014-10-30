@@ -36,7 +36,7 @@ $state = param('state') || "profile";
 if ($state eq "profile"){
 	&show_profile();
 } else {
-	&show_profile();
+	&display_users();
 }
 print page_trailer();
 exit 0;	
@@ -78,12 +78,12 @@ sub show_profile{
 
 	#my $display_profile = &display_profile();
 	print "	<div class=\"col-md-4\">
-    <div class=\"panel panel-primary\" style=\"width:350px\">
+    <div class=\"panel panel-primary\" style=\"width:500px\">
   	  <div class=\"panel-heading\">
         <h3 class=\"panel-title\">Interests</h3>
   	  </div>
       <div class=\"panel-body\">
-	    <p class=\"text-info\">$interest</p>
+	    <p class=\"text-info\">$general</p>
   	  </div>
 	</div>
 	</div>
@@ -91,12 +91,12 @@ sub show_profile{
 
 
 	print "<div class=\"col-md-4\">
-  <div class=\"panel panel-primary\" style=\"width:350px\">
+  <div class=\"panel panel-primary\" style=\"width:500px\">
   	<div class=\"panel-heading\">
       <h3 class=\"panel-title\">Personal Info</h3>
   	</div>
     <div class=\"panel-body\">
-	  <p class=\"text-info\">$general</p>
+	  <p class=\"text-info\">$interest</p>
 	</div>
   	</div>
   	</div>
@@ -117,14 +117,22 @@ sub display_users{
 	print "$html_code";
 	close F;
 
-	print "<div class=\"row\">
-  <div class=\"col-xs-6 col-md-3\">
-    <a href=\"#\" class=\"thumbnail\">
-    </a>
-  </div>
-  <center>Thumbnail</center>
-  
-</div>";
+	print "
+  <div class=\"row\">
+    <div class=\"col-md-1\">.col-md-1
+	</div>
+  	<div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+    <div class=\"col-md-1\">.col-md-1</div>
+  </div>\n";
 
 }
 
