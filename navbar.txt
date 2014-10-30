@@ -12,20 +12,13 @@
       <li class="Sign Up"><a href="#">Browse</a></li>
       <li><a href="#">About Us</a></li>
     </ul>
-    <div class="btn-group-vertical navbar-right">
-      <a href="#" class="btn btn-default">Button</a>
-    </div>
-    <form class="navbar-form navbar-right">
+
+    <form class="navbar-form navbar-left">
       <input type="text" class="form-control col-lg-8" placeholder="Search">
     </form>
-    <form class="navbar-form navbar-right">
-      <input type="text" class="form-control col-lg-8" placeholder="Username">
-    </form>
-    <form class="navbar-form navbar-right">
-      <input type="text" class="form-control col-lg-8" placeholder="Password">
-    </form>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#">Link</a></li>
+      <li><a href="#"><b>Sign In</b></a></li>
+      <li><a href="#"><b>Register</b></a></li>
     </ul>
   </div>
 </div>
