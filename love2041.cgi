@@ -72,21 +72,34 @@ sub show_profile{
 	my $interest = $panels[1];
 
 	#my $display_profile = &display_profile();
-	print "	<div class=\"panel panel-primary\" style=\"width:400px\">
-  	<div class=\"panel-heading\">
-      <h3 class=\"panel-title\">Personal Info</h3>
-  	</div>
-    <div class=\"panel-body\">
-	  <p class=\"text-info\">$general</p>
-  	</div>
-  </div>";
-
-	print "	<div class=\"panel panel-primary\" style=\"width:400px\">
+	print "	<div style=\"float:right\">
+	<div style=\"margin-top:20px\">
+	<div style=\"margin-right:100px\">
+	<div class=\"panel panel-primary\" style=\"width:400px\">
   	<div class=\"panel-heading\">
       <h3 class=\"panel-title\">Interests</h3>
   	</div>
     <div class=\"panel-body\">
 	  <p class=\"text-info\">$interest</p>
+  	</div>
+  	</div>
+	</div>
+	</div>
+  </div>";
+
+
+	print "	<div style=\"float:right\">
+	<div style=\"margin-top:20px\">
+	<div style=\"margin-right:20px\">
+	<div class=\"panel panel-primary\" style=\"width:400px\">
+  	<div class=\"panel-heading\">
+      <h3 class=\"panel-title\">Personal Info</h3>
+  	</div>
+    <div class=\"panel-body\">
+	  <p class=\"text-info\">$general</p>
+	</div>
+	</div>
+  	</div>
   	</div>
   </div>";
 	#print "<p class=\"text-info\">$display_profile</p>\n";
@@ -108,12 +121,16 @@ sub display_profile{
 	my $student_to_show  = $students[$n];
 	$student_to_show =~ s/\.\/students\///ig;
 
-	print "  <div class=\"panel panel-default\" style=\"width:350px\">
+	print "  <div style=\"margin-top: 70px\">
+	<div style=\"margin-left:50px\">
+	<div class=\"panel panel-default\" style=\"width:350px\">
     <div align=\"middle\" class=\"panel-heading\">
 	  <h2><b><center>$student_to_show</center></b></h2></div>
       <div class=\"panel-body\">
         <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
+	  </div>
       </div>
+	</div>
     </div>
   </div>\n";
 
@@ -155,7 +172,6 @@ sub display_profile{
 
 	return @panel_info;
 }
-
 
 
 #
