@@ -36,7 +36,7 @@ $state = param('state') || "profile";
 if ($state eq "profile"){
 	&show_profile();
 } else {
-	&show_users();
+	&show_profile();
 }
 print page_trailer();
 exit 0;	
@@ -77,32 +77,26 @@ sub show_profile{
 	my $interest = $panels[1];
 
 	#my $display_profile = &display_profile();
-	print "	<div style=\"float:right\">
-	<div style=\"margin-top:20px\">
-	<div style=\"margin-right:100px\">
-	<div class=\"panel panel-primary\" style=\"width:400px\">
-  	<div class=\"panel-heading\">
-      <h3 class=\"panel-title\">Interests</h3>
-  	</div>
-    <div class=\"panel-body\">
-	  <p class=\"text-info\">$interest</p>
-  	</div>
-  	</div>
+	print "	<div class=\"col-md-4\">
+    <div class=\"panel panel-primary\" style=\"width:350px\">
+  	  <div class=\"panel-heading\">
+        <h3 class=\"panel-title\">Interests</h3>
+  	  </div>
+      <div class=\"panel-body\">
+	    <p class=\"text-info\">$interest</p>
+  	  </div>
 	</div>
 	</div>
   </div>";
 
 
-	print "	<div style=\"float:right\">
-	<div style=\"margin-top:20px\">
-	<div style=\"margin-right:20px\">
-	<div class=\"panel panel-primary\" style=\"width:400px\">
+	print "<div class=\"col-md-4\">
+  <div class=\"panel panel-primary\" style=\"width:350px\">
   	<div class=\"panel-heading\">
       <h3 class=\"panel-title\">Personal Info</h3>
   	</div>
     <div class=\"panel-body\">
 	  <p class=\"text-info\">$general</p>
-	</div>
 	</div>
   	</div>
   	</div>
@@ -143,18 +137,25 @@ sub display_profile{
 	my $student_to_show  = $students[$n];
 	$student_to_show =~ s/\.\/students\///ig;
 
-	print "	<div style=\"margin-top: 70px\">
-	<div style=\"margin-left:50px\">
-	<div class=\"panel panel-default\" style=\"width:350px\">
-    <div align=\"middle\" class=\"panel-heading\">
-	  <h2><b><center>$student_to_show</center></b></h2></div>
-      <div class=\"panel-body\">
-        <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
+	$n += 1;
+	print " 
+  <div class=\"row\">
+	<div class=\"col-md-4\">
+	  <div class=\"panel panel-default\" style=\"width:350px\">
+        <div align=\"middle\" class=\"panel-heading\">
+	      <h2><b><center>$student_to_show</center></b></h2></div>
+            <div class=\"panel-body\">
+              <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
+              <div align=\"right\">
+     	        <p /><form method=\"post\" action=\"/~ykan215/love2041.cgi\" enctype=\"multipart/form-data\">
+                  <input type=\"submit\" name=\"state\" value=\"Message\" />
+<input type=\"hidden\" name=\"n\" value=\"$n\"  /></form>
+                <p />
+              </div>
+	        </div>
+        </div>
 	  </div>
-      </div>
-	</div>
-    </div>
-  </div>\n";
+    </div>\n";
 
 
 	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="$student_to_show";);
@@ -164,13 +165,6 @@ sub display_profile{
 		print $DBI::errstr;
 	}
 	
-	print p,
-		start_form,"\n",
-		submit("Message"),"\n",
-		hidden('n', $n + 1),
-		end_form,"\n",
-		p,"\n";
-
 	my $index = 0;
 	my @row = $sth->fetchrow_array();
 	my $length = @row;
