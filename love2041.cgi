@@ -57,31 +57,28 @@ sub browse_screen {
 }
 
 sub show_profile{
-	print "    <div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
-      <div class=\"container\">
-        <div class=\"navbar-header\">
-          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">
-            <span class=\"sr-only\">Toggle navigation</span>
-            <span class=\"icon-bar\"></span>
-            <span class=\"icon-bar\"></span>
-            <span class=\"icon-bar\"></span>
-          </button>
-          <a class=\"navbar-brand\" href=\"#\">Project name</a>
-        </div>
-        <div id=\"navbar\" class=\"collapse navbar-collapse\">
-          <ul class=\"nav navbar-nav\">
-            <li class=\"active\"><a href=\"#\">Home</a></li>
-            <li><a href=\"#about\">About</a></li>
-            <li><a href=\"#contact\">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>\n";
+	open (F, "navbar.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+
 #	print "<div class=\"jumbotron\"><div class=\"container\">\n";
 	my $display_profile = &display_profile();
 	print "<p>$display_profile</p>\n";
 #	print "</div>\n";
 }
+
+#function that displays all users.
+sub display_users{
+	#$n
+
+}
+
 
 sub display_profile{
 	my $n = param('n') || 0;
@@ -113,9 +110,9 @@ sub display_profile{
 		if (defined($row[$index])){
 			if ($row[$index] =~ /,@/ig){
 				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
-				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<ul>".$row[$index]."</ul>"."\n";
+				$profile = $profile."<h4>".$display_fields[$index]."</h4>"."<ul>".$row[$index]."</ul>"."\n";
 			} else {
-				$profile = $profile."<h3>".$display_fields[$index]."</h3>"."<ul>".$row[$index]."</ul>"."\n";
+				$profile = $profile."<h4>".$display_fields[$index]."</h4>"."<ul>".$row[$index]."</ul>"."\n";
 			}
 		}
 		$index += 1;
@@ -131,10 +128,9 @@ sub display_profile{
 #
 sub page_header {
 	print header,
-   		start_html("-title"=>"UNSW LOVE2041"); #-bgcolor=>"#B0E0E6");
-		print "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    	print "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.min.css\">\n";
-		#print "<title>UNSW 2041 Friend searcher</title>";
+   		start_html(
+		-style=>{'-src'=>"//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css"}, "-title"=>"UNSW LOVE2041");
+
 }
 
 # HTML placed at bottom of every screen
@@ -148,9 +144,7 @@ sub page_trailer {
 	#$html .= end_html;
 	print "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
 	print "<script src=\"js/bootstrap.min.js\"></script>\n";
-#	print "  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>
-#    <script src=\"../../dist/js/bootstrap.min.js\"></script>
-#    <script src=\"../../assets/js/ie10-viewport-bug-workaround.js\"></script>";
+
 	$html .= end_html;
 	return $html;
 }
