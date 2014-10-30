@@ -67,10 +67,17 @@ sub show_profile{
 	print "$html_code";
 	close F;
 
-#	print "<div class=\"jumbotron\"><div class=\"container\">\n";
 	my $display_profile = &display_profile();
-	print "<p>$display_profile</p>\n";
-#	print "</div>\n";
+	print "	<div class=\"panel panel-primary\">
+  	<div class=\"panel-heading\">
+      <h3 class=\"panel-title\">Personal Info</h3>
+  	</div>
+    <div class=\"panel-body\">
+	  <p class=\"text-info\">$display_profile</p>
+  	</div>
+  </div>";
+	#print "<p class=\"text-info\">$display_profile</p>\n";
+
 }
 
 #function that displays all users.
@@ -88,13 +95,23 @@ sub display_profile{
 	my $student_to_show  = $students[$n];
 	$student_to_show =~ s/\.\/students\///ig;
 
+	print "  <div class=\"panel panel-default\" style=\"width:350px\">
+    <div align=\"middle\" class=\"panel-heading\">
+	  <h2><b><center>$student_to_show</center></b></h2></div>
+      <div class=\"panel-body\">
+        <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
+      </div>
+    </div>
+  </div>\n";
+
+
 	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="$student_to_show";);
 	$sth = $dbh->prepare( $stmt );	
 	$rv = $sth->execute() or die $DBI::errstr;
 	if($rv < 0){
 		print $DBI::errstr;
 	}
-
+	
 	print p,
 		start_form,"\n",
 		submit("Message"),"\n",
@@ -110,7 +127,7 @@ sub display_profile{
 		if (defined($row[$index])){
 			if ($row[$index] =~ /,@/ig){
 				$row[$index] =~ s/,@/<p>\n<\/p>/ig;
-				$profile = $profile."<h4>".$display_fields[$index]."</h4>"."<ul>".$row[$index]."</ul>"."\n";
+				$profile = $profile."<h4><b>".$display_fields[$index]."</b></h4>"."<ul>".$row[$index]."</ul>"."\n";
 			} else {
 				$profile = $profile."<h4>".$display_fields[$index]."</h4>"."<ul>".$row[$index]."</ul>"."\n";
 			}
