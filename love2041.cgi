@@ -31,7 +31,7 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 $debug = 1;
 $students_dir = "./students";
 
-$state = param('state') || "profile";
+$state = param('state') || "browse";
 
 if ($state eq "profile" || $state eq "message"){
 	print show_profile();
@@ -122,21 +122,11 @@ sub display_users{
 	
 	print "$html_code";
 	close F;
-	my $boundary = $n + 10;
+	my $boundary = $n+10;
 
 	print "<div class=\"container\" align=\"middle\">\n";
 	print "<div class=\"row\">\n";
 	while ($n < $boundary){
-
-    	$stmt = qq(SELECT gender from USERS WHERE username="$students[$n]";);
-		$sth = $dbh->prepare( $stmt );	
-		$rv = $sth->execute() or die $DBI::errstr;
-		if($rv < 0){
-			print $DBI::errstr;
-		}
-
-		my @row = $sth->fetchrow_array();
-		$gender = $row[1]; 
 	
 		print "<div class=\"panel panel-default\" style=\"width:400px\">
 		<div class=\"panel-heading\">
@@ -152,12 +142,24 @@ sub display_users{
 	}
 	print "</div>\n";
 	print "</div>\n";
+    print "	<div class=\"container\" align=\"middle\">\n";
+	print "<div>\n";
+	print p,
+		start_form, "\n",
+		hidden('n', $boundary-10),"\n",
+		submit('Prev'),"\n",
+		end_form,"\n",
+		start_form,"\n",
+		hidden('n', $boundary),"\n",
+		submit('Next'),"\n",
+		end_form, "\n",
+		p, "\n";
+	print 	"</div>\n";
 
-    print "
-	<div class=\"container\" align=\"middle\">
-	  <a href=\"#\" class=\"btn btn-default\">Prev</a>
-  <a href=\"#\" class=\"btn btn-default\">Next</a>
-	</div>\n";
+#	print "	  <a href=\"#\" class=\"btn btn-default\">Prev</a>\n";
+#	print "   <a href=\"#\" class=\"btn btn-default\">Next</a>\n";
+	print "	</div>\n";
+
 #<div class=\"panel panel-default\" style=\"width:200px\">
 }
 
@@ -177,7 +179,6 @@ sub display_profile{
 	  <div class=\"panel panel-default\" style=\"width:350px\">
         <div align=\"middle\" class=\"panel-heading\">
 	      <h2><b><center>$student_to_show</center></b></h2></div>
-			<p>$state</p>
             <div class=\"panel-body\">
               <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
               <div align=\"right\">
@@ -231,6 +232,7 @@ sub page_header {
 	print header,
    		start_html(
 		-style=>{'-src'=>"//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css"}, "-title"=>"UNSW LOVE2041");
+	head,"\n";	
 
 }
 
