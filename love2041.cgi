@@ -104,6 +104,7 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
+	my $n = param('n') || 0;
 
 	open (F, "navbar.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
@@ -120,31 +121,39 @@ sub display_users{
 	close F;
 	my $boundary = $n + 10;
 
+	print "<div class=\"container\" align=\"middle\">\n";
+	print "<div class=\"row\">\n";
 	while ($n < $boundary){
 
-    $stmt = qq(SELECT gender from USERS WHERE username="$students[$n]";);
-	$sth = $dbh->prepare( $stmt );	
-	$rv = $sth->execute() or die $DBI::errstr;
-	if($rv < 0){
-		print $DBI::errstr;
-	}
+    	$stmt = qq(SELECT gender from USERS WHERE username="$students[$n]";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
 
-	my @row = $sth->fetchrow_array();
-	$gender = $row[1]; 
+		my @row = $sth->fetchrow_array();
+		$gender = $row[1]; 
 	
-	print "    <div class=\"panel panel-default\" style=\"width:700px\">
+		print "<div class=\"panel panel-default\" style=\"width:400px\">
 		<div class=\"panel-heading\">
+			<div align=\"left\">
           <h3><b>$students[$n]</b></h3>
-          <p>$gender</p>
-        </div>
-			<div class=\"container\" align=\"left\">
-			<img src=\"./students/$students[$n]/profile.jpg\">
 			</div>
-        <div class=\"panel-body\">
+        
         </div>
+			<center><img src=\"./students/$students[$n]/profile.jpg\"></centre>
     </div>\n";
 		$n += 1;
 	}
+	print "</div>\n";
+	print "</div>\n";
+
+    print "
+	<div class=\"container\" align=\"middle\">
+	  <a href=\"#\" class=\"btn btn-default\">Prev</a>
+  <a href=\"#\" class=\"btn btn-default\">Next</a>
+	</div>\n";
 #<div class=\"panel panel-default\" style=\"width:200px\">
 }
 
