@@ -137,31 +137,30 @@ sub display_users{
 		$student =~ s/\.\/students\///ig;
 	}
 	
-	my $boundary = $n+10;
+	my $i = $n;
+	param('n', $n);
 
 	print "<div class=\"container\" align=\"middle\">\n";
 	print "<div class=\"row\">\n";
-	while ($n < $boundary){
+	while ($i < $n+10){
 	
 		print "<div class=\"panel panel-default\" style=\"width:400px\">
 		<div class=\"panel-heading\">
 			<div align=\"left\">
-          <h3><b>$students[$n]</b></h3>
+          <h3><b>$students[$i]</b></h3>
 			</div>
         
         </div>
-			<center><img src=\"./students/$students[$n]/profile.jpg\"></centre>
+			<center><img src=\"./students/$students[$i]/profile.jpg\"></centre>
     </div>\n";
 
-		$n += 1;
+		$i += 1;
 	}
 	
 	print "</div>\n";
 	print "</div>\n";
     print "	<div class=\"container\" align=\"middle\">\n";
-#	print "<div>\n";
-
-	param('n', $n);
+#	param('n', $n);
 	print p,
 		start_form, "\n",
 		hidden('n'),"\n",
