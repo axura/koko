@@ -107,36 +107,28 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
+#	my $n = param('n') || 0;
+	my $pre = param('Prev');
+	my $nex	= param('Next');
 
-	if (defined(param('Prev')) || defined(param('Next'))){
-		if(param('Prev')){
-			$n -= 10;
-		} elsif (param('Next')){
-			$n += 10;
+	if ($pre && !$nex){
+		my $n -= 10;
+		if ($n < 0){
+			$n = 0;
 		}
+	} elsif ($nex){
+		$n += 10;
 	} else {
 		$n = 0;
 	}
 
-	if ($n < 0){
-		$n = 0;
-	}
-
-	open (F, "navbar.txt") or die "cannot open navbar.txt";
-	my @html_lines = <F>;
-	my $html_code = "";
-	foreach $line (@html_lines){
-		$html_code = $html_code.$line;
-	}
-
-	print "$html_code";
-	close F;
+	&page_navbar();
 
 	my @students = glob("$students_dir/*");
 	foreach my $student (@students){
 		$student =~ s/\.\/students\///ig;
 	}
-	
+
 	my $i = $n;
 	param('n', $n);
 
@@ -144,38 +136,27 @@ sub display_users{
 	print "<div class=\"row\">\n";
 	while ($i < $n+10){
 	
-		print "<div class=\"panel panel-default\" style=\"width:400px\">
-		<div class=\"panel-heading\">
-			<div align=\"left\">
-          <h3><b>$students[$i]</b></h3>
-			</div>
-        
-        </div>
-			<center><img src=\"./students/$students[$i]/profile.jpg\"></centre>
-    </div>\n";
+		print "<div class=\"panel panel-default\" style=\"width:400px\">\n";
+		print "  <div class=\"panel-heading\">\n";
+		print "     <div align=\"left\">\n";
+		print "       <h3><b>$students[$i]</b></h3>\n";
+		print "		</div>\n";
+		print "  </div>\n";
+		print "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
+		print "</div>\n";
 
 		$i += 1;
-	}
-	
+	}	
 	print "</div>\n";
 	print "</div>\n";
-    print "	<div class=\"container\" align=\"middle\">\n";
-#	param('n', $n);
-	print p,
-		start_form, "\n",
-		hidden('n'),"\n",
-		hidden('prev'),"\n",
-		hidden('next'),"\n",
-		submit('Prev'),"\n",
-		submit('Next'),"\n",
-		end_form, "\n",
-		p, "\n";
 
-#	print "	  <a href=\"#\" class=\"btn btn-default\">Prev</a>\n";
-#	print "   <a href=\"#\" class=\"btn btn-default\">Next</a>\n";
-	print "	</div>\n";
+	print "<div class=\"container\" align=\"middle\">\n";
+	print submit("-name"=>'Prev',
+			"-value"=>'Prev');
 
-#<div class=\"panel panel-default\" style=\"width:200px\">
+	print submit("-name"=>'Next',
+			"-value"=>'Next');
+	print "</div>\n";
 }
 
 
@@ -244,6 +225,20 @@ sub display_profile{
 # HTML placed at bottom of every screen
 #
 
+sub page_navbar{
+
+	open (F, "navbar.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+}
+
+
 sub page_title{
 	open (F, "navbar.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
@@ -272,7 +267,7 @@ sub page_header {
    		start_html(
 		-style=>{'-src'=>"//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css"}, "-title"=>"UNSW LOVE2041");
 	head,"\n";	
-
+	
 }
 
 # HTML placed at bottom of every screen
