@@ -244,6 +244,30 @@ sub display_profile{
 #
 # HTML placed at bottom of every screen
 #
+
+sub page_title{
+	open (F, "navbar.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+
+	open (F, "title.txt") or die "cannot open navbar.txt";
+	@html_lines = <F>;
+	$html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+}
+
+
 sub page_header {
 	print header,
    		start_html(
