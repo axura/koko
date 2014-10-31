@@ -107,7 +107,20 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
-	my $n = param('n') || 0;
+
+	if (defined(param('Prev')) || defined(param('Next'))){
+		if(param('Prev')){
+			$n -= 10;
+		} elsif (param('Next')){
+			$n += 10;
+		}
+	} else {
+		$n = 0;
+	}
+
+	if ($n < 0){
+		$n = 0;
+	}
 
 	open (F, "navbar.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
@@ -115,13 +128,15 @@ sub display_users{
 	foreach $line (@html_lines){
 		$html_code = $html_code.$line;
 	}
+
+	print "$html_code";
+	close F;
+
 	my @students = glob("$students_dir/*");
 	foreach my $student (@students){
 		$student =~ s/\.\/students\///ig;
 	}
 	
-	print "$html_code";
-	close F;
 	my $boundary = $n+10;
 
 	print "<div class=\"container\" align=\"middle\">\n";
@@ -140,21 +155,22 @@ sub display_users{
 
 		$n += 1;
 	}
+	
 	print "</div>\n";
 	print "</div>\n";
     print "	<div class=\"container\" align=\"middle\">\n";
-	print "<div>\n";
+#	print "<div>\n";
+
+	param('n', $n);
 	print p,
 		start_form, "\n",
-		hidden('n', $boundary-10),"\n",
+		hidden('n'),"\n",
+		hidden('prev'),"\n",
+		hidden('next'),"\n",
 		submit('Prev'),"\n",
-		end_form,"\n",
-		start_form,"\n",
-		hidden('n', $boundary),"\n",
 		submit('Next'),"\n",
 		end_form, "\n",
 		p, "\n";
-	print 	"</div>\n";
 
 #	print "	  <a href=\"#\" class=\"btn btn-default\">Prev</a>\n";
 #	print "   <a href=\"#\" class=\"btn btn-default\">Next</a>\n";
