@@ -33,8 +33,11 @@ $students_dir = "./students";
 
 $state = param('state') || "profile";
 
-print display_users();
-
+if ($state eq "profile" || $state eq "message"){
+	print show_profile();
+} else {
+	print display_users();
+}
 print page_trailer();
 exit 0;	
 
@@ -144,6 +147,7 @@ sub display_users{
         </div>
 			<center><img src=\"./students/$students[$n]/profile.jpg\"></centre>
     </div>\n";
+
 		$n += 1;
 	}
 	print "</div>\n";
@@ -173,11 +177,12 @@ sub display_profile{
 	  <div class=\"panel panel-default\" style=\"width:350px\">
         <div align=\"middle\" class=\"panel-heading\">
 	      <h2><b><center>$student_to_show</center></b></h2></div>
+			<p>$state</p>
             <div class=\"panel-body\">
               <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
               <div align=\"right\">
      	        <p /><form method=\"post\" action=\"/~ykan215/love2041.cgi\" enctype=\"multipart/form-data\">
-                  <input type=\"submit\" name=\"state\" value=\"Message\" />
+                  <input type=\"submit\" name=\"state\" value=\"message\" />
 <input type=\"hidden\" name=\"n\" value=\"$n\"  /></form>
                 <p />
               </div>
