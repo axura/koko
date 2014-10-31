@@ -33,11 +33,8 @@ $students_dir = "./students";
 
 $state = param('state') || "profile";
 
-if ($state eq "profile"){
-	&show_profile();
-} else {
-	&display_users();
-}
+print display_users();
+
 print page_trailer();
 exit 0;	
 
@@ -107,33 +104,48 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
+
 	open (F, "navbar.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
 	my $html_code = "";
 	foreach $line (@html_lines){
 		$html_code = $html_code.$line;
 	}
-
+	my @students = glob("$students_dir/*");
+	foreach my $student (@students){
+		$student =~ s/\.\/students\///ig;
+	}
+	
 	print "$html_code";
 	close F;
+	my $boundary = $n + 10;
 
-	print "
-  <div class=\"row\">
-    <div class=\"col-md-1\">.col-md-1
-	</div>
-  	<div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-    <div class=\"col-md-1\">.col-md-1</div>
-  </div>\n";
+	while ($n < $boundary){
 
+    $stmt = qq(SELECT gender from USERS WHERE username="$students[$n]";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+
+	my @row = $sth->fetchrow_array();
+	$gender = $row[1]; 
+	
+	print "    <div class=\"panel panel-default\" style=\"width:700px\">
+		<div class=\"panel-heading\">
+          <h3><b>$students[$n]</b></h3>
+          <p>$gender</p>
+        </div>
+			<div class=\"container\" align=\"left\">
+			<img src=\"./students/$students[$n]/profile.jpg\">
+			</div>
+        <div class=\"panel-body\">
+        </div>
+    </div>\n";
+		$n += 1;
+	}
+#<div class=\"panel panel-default\" style=\"width:200px\">
 }
 
 
