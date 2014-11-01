@@ -244,24 +244,39 @@ sub display_search{
 	if (!defined(@results)){
 		$html_code .= "<center><h4 class=\"text-primary\">Sorry! There were no results found for <b>$search_string</b></h4></center>\n";
 	} else {
-		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string<b></h4></center>\n";
+		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string</b></h4></center>\n";
 	}
 
 	if (defined(@results)){
+
 		$html_code .= "<div class=\"container\" align=\"middle\">\n";
 		foreach $student (@results){
-#			$html_code .= "<p class=\"text-primary\"><center>$student</center></p>\n";
+
+		$stmt = qq(SELECT gender, birthdate, degree from USERS WHERE username="$student";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
+		
+		my @row = $sth->fetchrow_array();
+		$gender = $row[0];
 
 			$html_code .= "<div class=\"panel panel-default\" style=\"width:700px\">\n";
 			$html_code .= "  <div class=\"panel-heading\">\n";
-			$html_code .= "    <h3><b>$student</b></h3>\n";
+			$html_code .= "	   <a href=\"love2041.cgi?state=profile&user=$student\"\n";
+			$html_code .= "      <h3><b>$student</b></h3>\n";
+			$html_code .= "    </a>\n";
 			$html_code .= "  </div>\n";
 			$html_code .= "  <div class=\"panel-body\">\n";
 			$html_code .= "  <div style=\"float:left\">\n";
 			$html_code .= "  <center><img src=\"./students/$student/profile.jpg\"></centre>\n";		
 			$html_code .= "  </div>\n";
-
-			$html_code .= "  <p class=\"text-primary\">Username: $student</p>\n";
+			$html_code .= "  <br><br>\n";
+			$html_code .= "  <ul>\n";
+			$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
+			$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
+			$html_code .= "  </ul>\n";
 			$html_code .= "  </div>\n";
 			$html_code .= "</div>\n";
 		}
