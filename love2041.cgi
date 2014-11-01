@@ -111,14 +111,17 @@ sub show_profile{
 sub display_users{
 	my $n = param('n') || 0;
 
-	if(param('Prev')){
-		my $n -= 10;
-		if ($n < 0){
-			$n = 0;
+	if (defined(param('Prev')) || defined(param('Next'))){
+		if(param('Prev')){
+			$n -= 10;
+		} elsif (param('Next')){
+			$n += 10;
 		}
-	} elsif (param('Next')){
-		$n += 10;
 	} else {
+		$n = 0;
+	}
+
+	if ($n < 0){
 		$n = 0;
 	}
 
@@ -139,7 +142,9 @@ sub display_users{
 		print "<div class=\"panel panel-default\" style=\"width:400px\">\n";
 		print "  <div class=\"panel-heading\">\n";
 		print "     <div align=\"left\">\n";
-		print "       <h3><b>$students[$i]</b></h3>\n";
+		print "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
+		print "       <h2><b>$students[$i]</b></h2>\n";
+		print "       </a>\n";
 		print "		</div>\n";
 		print "  </div>\n";
 		print "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
@@ -150,19 +155,26 @@ sub display_users{
 	print "</div>\n";
 	print "</div>\n";
 
-#	print "<div class=\"container\" align=\"middle\">\n";
-#	print submit("-name"=>'Prev',
-#			"-value"=>'Prev');
-
-#	print submit("-name"=>'Next',
-#			"-value"=>'Next');
-#	print "</div>\n";
-
-	print "<div>\n";
-	$scrolling =start_form.hidden('n');
-	$scrolling = ul(li(submit("Prev")),li(submit("Next")));
+	print "<div class=\"container\" align=\"middle\">\n";
+	print "<div class=\"row\">\n";
+#	param('n', $n);
+ 	print p,
+ 		start_form, "\n",
+		hidden('n', $n-10),"\n",
+		hidden('n'),"\n",
+		hidden('user'),"\n",
+		hidden('prev'),"\n",
+		hidden('next'),"\n",
+ 		submit('Prev'),"\n",
+		end_form,"\n",
+		start_form,"\n",
+		hidden('n', $n),"\n",
+ 		submit('Next'),"\n",
+ 		end_form, "\n",
+ 		p, "\n";
 	print "</div>\n";
-	print "$scrolling\n";
+	print "</div>\n";
+
 }
 
 
@@ -171,8 +183,14 @@ sub display_profile{
 	my @students = glob("$students_dir/*");
 	$n = min(max($n, 0), $#students);
 	param('n', $n + 1);
-	my $student_to_show  = $students[$n];
-	$student_to_show =~ s/\.\/students\///ig;
+	my $student_to_show = "";
+
+	if (param('user')){
+		$student_to_show = param('user');
+	} else {
+		$student_to_show  = $students[$n];
+		$student_to_show =~ s/\.\/students\///ig;
+	}
 
 	$n += 1;
 	print " 
@@ -184,7 +202,7 @@ sub display_profile{
             <div class=\"panel-body\">
               <center><img align=\"middle\" class=\"image rounded\" src=\"./students/$student_to_show/profile.jpg\"></center>
               <div align=\"right\">
-     	        <p /><form method=\"post\" action=\"/~ykan215/love2041.cgi\" enctype=\"multipart/form-data\">
+     	        <p /><form method=\"post\" action=\"love2041.cgi\" enctype=\"multipart/form-data\">
                   <input type=\"submit\" name=\"state\" value=\"message\" />
 <input type=\"hidden\" name=\"n\" value=\"$n\"  /></form>
                 <p />
