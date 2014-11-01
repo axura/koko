@@ -38,17 +38,23 @@ print &page_header();
 $state = param('state') || "sign_in";
 $page_html .= page_navbar();
 
+$unsigned = 1;
+
 if (param('Next') || param('Prev')){
 	$page_html .= display_users();
+	$unsigned = 0;
 } elsif (param('Username') && param('Password')){
 		$login = &authenticate();
+		$unsigned = 0;
 		if ($login == 1){
 			$page_html = page_navbar_login();
 			$page_html .= login();
 		} else {
 			$page_html .= login_error();
 		}
-}else {
+} 
+
+if ($unsigned == 1){
 	if (param('search')){
 		$page_html .= display_search();
 	} elsif ($state eq "profile"){
@@ -60,7 +66,6 @@ if (param('Next') || param('Prev')){
 		$page_html .= page_sign_in();
 	#	$page_html .= authenticate();
 	}
-
 }
 
 
@@ -68,7 +73,6 @@ print "$page_html\n";
 
 print &page_trailer();
 exit 0;	
-
 
 sub login{
 	my $html_code = "";
@@ -80,7 +84,16 @@ sub login{
 sub login_error{
 	my $html_code = "";
 	my $html_code .= page_title();
-	$html_code = "<center><h2>login error</h2></center>\n";
+
+	open (F, "sign_in_error.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+	close F;
+	
+	#$html_code = "<center><h2>login error</h2></center>\n";
+	return $html_code;
 }
 
 #function that displays all users.
@@ -337,7 +350,6 @@ sub page_sign_in{
 	return $html_code;
 
 }
-
 
 sub authenticate{
 	my $html_code = "";
