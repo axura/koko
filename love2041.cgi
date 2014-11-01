@@ -16,16 +16,6 @@ my @display_fields = ("name","gender", "height", "birthdate","weight", "degree",
 
 #attempting to run the program database.pl, setting up the connection to the database
 $status = system("./database.pl");
-
-# print start of HTML ASAP to assist debugging if there is an error in the script
-print page_header();
-
-$state = param('state') || "sign_in";
-
-&page_navbar();
-if ($state ne "profile"){
-	&page_title();
-}
 my $driver   = "SQLite";
 my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
@@ -34,66 +24,25 @@ my $password = "";
 my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
                       or die $DBI::errstr;
 
+
 # some globals used through the script
 $debug = 1;
 $students_dir = "./students";
 
-#&sign_in();
-print p, $state, p;
+#initialise the string that prints the html code
+$page_html = "";
 
-if ($state eq "profile" || $state eq "message"){
-	&show_profile();
-} elsif ($state eq "browse"){
-	&display_users();
-} else {
-	$state = &page_sign_in();
-	print "<p><center>$state</center></p>\n";
-#	print display_users();
-}
+# print start of HTML ASAP to assist debugging if there is an error in the script
+print &page_header();
 
-	print "<p><center>$state</center></p>\n";
+$state = param('state') || "sign_in";
 
-if ($state eq "browse"){
-	print display_users();
-} 
+$page_html .= page_navbar();
+$page_html .= display_profile();
+print "$page_html\n";
 
-&page_trailer();
+print &page_trailer();
 exit 0;	
-
-sub show_profile{
-
-	my @panels = &display_profile();
-	my $general = $panels[0];
-	my $interest = $panels[1];
-
-	#my $display_profile = &display_profile();
-	print "	<div class=\"col-md-4\">
-    <div class=\"panel panel-primary\" style=\"width:500px\">
-  	  <div class=\"panel-heading\">
-        <h3 class=\"panel-title\">Interests</h3>
-  	  </div>
-      <div class=\"panel-body\">
-	    <p class=\"text-info\">$general</p>
-  	  </div>
-	</div>
-	</div>
-  </div>";
-
-
-	print "<div class=\"col-md-4\">
-  <div class=\"panel panel-primary\" style=\"width:500px\">
-  	<div class=\"panel-heading\">
-      <h3 class=\"panel-title\">Personal Info</h3>
-  	</div>
-    <div class=\"panel-body\">
-	  <p class=\"text-info\">$interest</p>
-	</div>
-  	</div>
-  	</div>
-  </div>";
-	#print "<p class=\"text-info\">$display_profile</p>\n";
-
-}
 
 #function that displays all users.
 sub display_users{
@@ -165,6 +114,7 @@ sub display_users{
 
 
 sub display_profile{
+	my $html_code = "";
 	my $n = param('n') || 0;
 	my @students = glob("$students_dir/*");
 	$n = min(max($n, 0), $#students);
@@ -179,7 +129,7 @@ sub display_profile{
 	}
 
 	$n += 1;
-	print " 
+	$html_code.= " 
   <div class=\"row\">
 	<div class=\"col-md-4\">
 	  <div class=\"panel panel-default\" style=\"width:350px\">
@@ -211,7 +161,7 @@ sub display_profile{
 	my $length = @row;
 	my $profile = "";
 	my $interest = "";
-	my @panel_info = ();
+#	my @panel_info = ();
 	while ($index < $length){
 		if (defined($row[$index])){
 			if ($row[$index] =~ /,@/ig){
@@ -224,10 +174,39 @@ sub display_profile{
 		$index += 1;
 	}
 	
-	push(@panel_info, $profile);
-	push(@panel_info, $interest);
+#	push(@panel_info, $profile);
+#	push(@panel_info, $interest);
 
-	return @panel_info;
+#	return @panel_info;
+
+	#my $display_profile = &display_profile();
+	$html_code.= "	<div class=\"col-md-4\">
+    <div class=\"panel panel-primary\" style=\"width:500px\">
+  	  <div class=\"panel-heading\">
+        <h3 class=\"panel-title\">Interests</h3>
+  	  </div>
+      <div class=\"panel-body\">
+	    <p class=\"text-info\">$profile</p>
+  	  </div>
+	</div>
+	</div>
+  </div>";
+
+
+	$html_code.= "<div class=\"col-md-4\">
+  <div class=\"panel panel-primary\" style=\"width:500px\">
+  	<div class=\"panel-heading\">
+      <h3 class=\"panel-title\">Personal Info</h3>
+  	</div>
+    <div class=\"panel-body\">
+	  <p class=\"text-info\">$interest</p>
+	</div>
+  	</div>
+  	</div>
+  </div>";
+
+	return $html_code;
+
 }
 
 
@@ -304,8 +283,8 @@ sub page_navbar{
 		$html_code = $html_code.$line;
 	}
 
-	print "$html_code";
 	close F;
+	print $html_code;
 }
 
 
@@ -323,10 +302,10 @@ sub page_title{
 
 
 sub page_header {
-	print header,
+	return header,
    		start_html(
 		-style=>{'-src'=>"//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css"}, "-title"=>"UNSW LOVE2041");
-	head,"\n";	
+#	header,"\n";	
 	
 }
 
@@ -339,8 +318,8 @@ sub page_trailer {
 	$html .= join("", map("<!-- $_=".param($_)." -->\n", param())) if $debug;
 	
 	#$html .= end_html;
-	print "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
-	print "<script src=\"js/bootstrap.min.js\"></script>\n";
+	$html .= "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
+	$html .= "<script src=\"js/bootstrap.min.js\"></script>\n";
 
 	$html .= end_html;
 	return $html;
