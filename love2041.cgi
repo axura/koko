@@ -94,19 +94,17 @@ sub display_users{
 	}
 	
 	my @row = $sth->fetchrow_array();
-
-
 	
-		$html_code .= "<div class=\"panel panel-default\" style=\"width:400px\">\n";
-		$html_code .= "  <div class=\"panel-heading\">\n";
-		$html_code .= "     <div align=\"left\">\n";
-		$html_code .= "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
-		$html_code .= "       <h2><b>$students[$i]</b></h2>\n";
-		$html_code .= "       </a>\n";
-		$html_code .= "		</div>\n";
-		$html_code .= "  </div>\n";
-		$html_code .= "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
-		$html_code .= "</div>\n";
+	$html_code .= "<div class=\"panel panel-default\" style=\"width:400px\">\n";
+	$html_code .= "  <div class=\"panel-heading\">\n";
+	$html_code .= "     <div align=\"left\">\n";
+	$html_code .= "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
+	$html_code .= "       <h2><b>$students[$i]</b></h2>\n";
+	$html_code .= "       </a>\n";
+	$html_code .= "		</div>\n";
+	$html_code .= "  </div>\n";
+	$html_code .= "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
+	$html_code .= "</div>\n";
 
 		$i += 1;
 	}	
@@ -249,12 +247,29 @@ sub display_search{
 		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string<b></h4></center>\n";
 	}
 
-	foreach $student (@results){
-		$html_code .= "<p class=\"text-primary\"><center>$student</center></p>\n";
-	}		
+	if (defined(@results)){
+		$html_code .= "<div class=\"container\" align=\"middle\">\n";
+		foreach $student (@results){
+#			$html_code .= "<p class=\"text-primary\"><center>$student</center></p>\n";
 
+			$html_code .= "<div class=\"panel panel-default\" style=\"width:700px\">\n";
+			$html_code .= "  <div class=\"panel-heading\">\n";
+			$html_code .= "    <h3><b>$student</b></h3>\n";
+			$html_code .= "  </div>\n";
+			$html_code .= "  <div class=\"panel-body\">\n";
+			$html_code .= "  <div style=\"float:left\">\n";
+			$html_code .= "  <center><img src=\"./students/$student/profile.jpg\"></centre>\n";		
+			$html_code .= "  </div>\n";
+
+			$html_code .= "  <p class=\"text-primary\">Username: $student</p>\n";
+			$html_code .= "  </div>\n";
+			$html_code .= "</div>\n";
+		}
+		$html_code .= "</div>\n";
+	}
 	return $html_code;
 }
+
 
 sub page_sign_in{
 	my $html_code = "";
