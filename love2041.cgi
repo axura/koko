@@ -33,13 +33,15 @@ $students_dir = "./students";
 
 $state = param('state') || "browse";
 
+#&sign_in();
+
 if ($state eq "profile" || $state eq "message"){
 	print show_profile();
 } else {
 	print display_users();
 }
 print page_trailer();
-exit 0;	
+#exit 0;	
 
 sub browse_screen {
 	my $n = param('n') || 0;
@@ -107,16 +109,14 @@ sub show_profile{
 
 #function that displays all users.
 sub display_users{
-#	my $n = param('n') || 0;
-	my $pre = param('Prev');
-	my $nex	= param('Next');
+	my $n = param('n') || 0;
 
-	if ($pre && !$nex){
+	if(param('Prev')){
 		my $n -= 10;
 		if ($n < 0){
 			$n = 0;
 		}
-	} elsif ($nex){
+	} elsif (param('Next')){
 		$n += 10;
 	} else {
 		$n = 0;
@@ -150,13 +150,19 @@ sub display_users{
 	print "</div>\n";
 	print "</div>\n";
 
-	print "<div class=\"container\" align=\"middle\">\n";
-	print submit("-name"=>'Prev',
-			"-value"=>'Prev');
+#	print "<div class=\"container\" align=\"middle\">\n";
+#	print submit("-name"=>'Prev',
+#			"-value"=>'Prev');
 
-	print submit("-name"=>'Next',
-			"-value"=>'Next');
+#	print submit("-name"=>'Next',
+#			"-value"=>'Next');
+#	print "</div>\n";
+
+	print "<div>\n";
+	$scrolling =start_form.hidden('n');
+	$scrolling = ul(li(submit("Prev")),li(submit("Next")));
 	print "</div>\n";
+	print "$scrolling\n";
 }
 
 
@@ -221,6 +227,22 @@ sub display_profile{
 }
 
 
+sub sign_in{
+	&page_navbar();
+	&page_title();
+
+	open (F, "sign_in.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	print "$html_code";
+	close F;
+	
+}
+
 #
 # HTML placed at bottom of every screen
 #
@@ -240,16 +262,6 @@ sub page_navbar{
 
 
 sub page_title{
-	open (F, "navbar.txt") or die "cannot open navbar.txt";
-	my @html_lines = <F>;
-	my $html_code = "";
-	foreach $line (@html_lines){
-		$html_code = $html_code.$line;
-	}
-
-	print "$html_code";
-	close F;
-
 	open (F, "title.txt") or die "cannot open navbar.txt";
 	@html_lines = <F>;
 	$html_code = "";
