@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
-# written by andrewt@cse.unsw.edu.au September 2013
-# as a starting point for COMP2041/9041 assignment 2
-# http://cgi.cse.unsw.edu.au/~cs2041/assignments/LOVE2041/
+#written by Yue (Alice) Kang
+#dating website "UNSW 2041 Friend Searcher"
+
 
 use CGI qw/:all/;
 use CGI::Carp qw(fatalsToBrowser warningsToBrowser);
@@ -11,11 +11,13 @@ use List::Util qw/min max/;
 use DBI;
 warningsToBrowser(1);
 
+#array of information fields, to be used for the display profiles
 my @display_fields = ("name","gender", "height", "birthdate","weight", "degree", "favourite hobbies", "favourite books","favourite TV shows", "favourite movies", "favourite bands");
 
-
-#attempting to run the program database.pl, setting up the connection to the database
+#attempting to run the program database.pl
 $status = system("./database.pl");
+
+#setting connection to the database "students.db"
 my $driver   = "SQLite";
 my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
@@ -30,29 +32,40 @@ $debug = 1;
 $students_dir = "./students";
 
 #initialise the string that prints the html code
+$page_title = "";
 $page_html = "";
 
 # print start of HTML ASAP to assist debugging if there is an error in the script
 print &page_header();
 
 $state = param('state') || "sign_in";
-$page_html .= page_navbar();
 
 $unsigned = 1;
 
+#checks for the cases of what page is accessed.
+#it checks for the following cases: scrolling through browsed users, logging in a user
+#login error, reading profile, sign in page. It calls the relevant functions to concat the
+#html code relevant to a string before printing it. Afterwards the page_trailer is printed
 if (param('Next') || param('Prev')){
 	$page_html .= display_users();
 	$unsigned = 0;
 } elsif (param('Username') && param('Password')){
 		$login = &authenticate();
-		$unsigned = 0;
 		if ($login == 1){
-			$page_html = page_navbar_login();
 			$page_html .= login();
+			$unsigned = 0;
 		} else {
 			$page_html .= login_error();
+			$unsigned = 0;
 		}
-} 
+}
+
+if ($unsigned == 1){
+	$page_title = page_navbar();
+} else {
+	$page_title = page_navbar_login();
+}
+	$page_html = $page_title.$page_html;
 
 if ($unsigned == 1){
 	if (param('search')){
@@ -64,7 +77,6 @@ if ($unsigned == 1){
 	} elsif ($state eq "sign_in"){
 		$page_html .= page_title();
 		$page_html .= page_sign_in();
-	#	$page_html .= authenticate();
 	}
 }
 
@@ -72,8 +84,9 @@ if ($unsigned == 1){
 print "$page_html\n";
 
 print &page_trailer();
-exit 0;	
+#exit 0;	
 
+#writes the html code for the welcome page after a user logs in
 sub login{
 	my $html_code = "";
 	$html_code .= page_title();
@@ -81,6 +94,8 @@ sub login{
 	return $html_code;
 }
 
+#writes the html code for when a user enters invalid username or passworld
+#slight change to the sign in box to indicate the error. 
 sub login_error{
 	my $html_code = "";
 	my $html_code .= page_title();
@@ -92,11 +107,20 @@ sub login_error{
 	}
 	close F;
 	
-	#$html_code = "<center><h2>login error</h2></center>\n";
 	return $html_code;
 }
 
-#function that displays all users.
+sub finding_match{
+	$sth = $dbh->sqlite_create_function( 'match', -1 , sub {return $compatibility }, 'create function' );
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+}
+
+#function that displays all users. In one page it will display 10 users,
+#parameter n is passed to keep track of the next user to display when scrolling through images. The user's info on gender, birthdate and degree are taken to be displayed
+#parameter should equal to "browse" when this is called. 
 sub display_users{
 	my $html_code = "";
 	my $n = param('n') || 0;
@@ -123,8 +147,10 @@ sub display_users{
 	my $i = $n;
 	param('n', $n);
 
+	#writing the html code for each of the profiles in a panel
 	$html_code .= "<div class=\"container\" align=\"middle\">\n";
 	$html_code .= "<div class=\"row\">\n";
+
 	while ($i < $n+10){
 		$stmt = qq(SELECT gender,birthdate, degree from USERS WHERE username="$students[$i]";);
 		$sth = $dbh->prepare( $stmt );	
@@ -148,7 +174,7 @@ sub display_users{
 		$html_code .= "  <br><br>\n";
 		$html_code .= "  <ul>\n";
 		$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
-		$html_code .= "    <p class=\"text-primary\">Gender: $row[1] </p>\n";
+		$html_code .= "    <p class=\"text-primary\">Birthdate: $row[1] </p>\n";
 		$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
 		$html_code .= "  </ul>\n";
 		$html_code .= "  </div>\n";
@@ -161,9 +187,8 @@ sub display_users{
 
 	$html_code .= "<div class=\"row\">\n";
 	$html_code .= "<div class=\"container\" align=\"middle\">\n";
-#	param('n', $n);
-#	$state = "browse";
-#	$html_code .= param('state',$state);
+
+	#buttons for the next and prev
   	$html_code .= p(
  		start_form, "\n",
 		hidden('n', $n-10),"\n",
@@ -185,7 +210,12 @@ sub display_users{
 
 }
 
-
+#html code for printing a single user's profile
+#parameter n is used to keep track of the user to be displayed. Originally it was used to 
+#toggle between the user profiles in subset 0
+#with username given, the  function will print the image in a file before retreiving data
+#from the database. After decoding the data, and string concat into two strings
+#it will be placed in the html code
 sub display_profile{
 	my $html_code = "";
 	my $n = param('n') || 0;
@@ -221,7 +251,9 @@ sub display_profile{
 	  </div>
     </div>\n";
 
-
+	#retrieving the information of a user, the field attributes are the same as the array
+	#display_fields
+	#below the fields of the user are placed into an array @row
 	$stmt = qq(SELECT name,gender, height, birthdate,weight, degree, favourite_hobbies, favourite_books,favourite_TV_shows, favourite_movies, favourite_bands from USERS WHERE username="$student_to_show";);
 	$sth = $dbh->prepare( $stmt );	
 	$rv = $sth->execute() or die $DBI::errstr;
@@ -234,7 +266,8 @@ sub display_profile{
 	my $length = @row;
 	my $profile = "";
 	my $interest = "";
-#	my @panel_info = ();
+	
+	#concating all the info. Some information about users was not given, thus left out
 	while ($index < $length){
 		if (defined($row[$index])){
 			if ($row[$index] =~ /,@/ig){
@@ -246,6 +279,7 @@ sub display_profile{
 		}
 		$index += 1;
 	}
+	
 	
 	$html_code.= "	<div class=\"col-md-4\">
     <div class=\"panel panel-primary\" style=\"width:500px\">
@@ -276,6 +310,10 @@ sub display_profile{
 
 }
 
+#page that will display the searched results. Function is used when state is in "search" mode
+#client can enter a substring, consisting of alphabet and numbers. 
+#the function will search through all the usernames that consist of that substring and push
+#into an array. Usig the array, a list of usernames that match will be generated
 sub display_search{
 	my $html_code = "";
 	my $search_string = param('search');
@@ -290,13 +328,18 @@ sub display_search{
 		}
 	}
 
+#based on the number of items in @results, decide whether there are no results, one or many
 	$html_code .= "<br><br>\n";
+	$no_of_results = @results;
 	if (!defined(@results)){
 		$html_code .= "<center><h4 class=\"text-primary\">Sorry! There were no results found for <b>$search_string</b></h4></center>\n";
+	} elsif ($no_of_results == 1) {
+		$html_code .= "<center><h4 class=\"text-primary\"><b>$no_of_results</b>result found for <b>$search_string</b></h4></center><br><br>\n";
 	} else {
-		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string</b></h4></center><br><br>\n";
+		$html_code .= "<center><h4 class=\"text-primary\"><b>$no_of_results</b>result(s) found for <b>$search_string</b></h4></center><br><br>\n";
 	}
 
+#html code for displaying the results, the format is similar to the display in "browse" mode
 	if (defined(@results)){
 
 		$html_code .= "<div class=\"container\" align=\"middle\">\n";
@@ -325,7 +368,7 @@ sub display_search{
 			$html_code .= "  <br><br>\n";
 			$html_code .= "  <ul>\n";
 			$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
-			$html_code .= "    <p class=\"text-primary\">Gender: $row[1] </p>\n";
+			$html_code .= "    <p class=\"text-primary\">Birthdate: $row[1] </p>\n";
 			$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
 			$html_code .= "  </ul>\n";
 			$html_code .= "  </div>\n";
@@ -336,7 +379,7 @@ sub display_search{
 	return $html_code;
 }
 
-
+#html code for sign in page
 sub page_sign_in{
 	my $html_code = "";
 
@@ -351,6 +394,7 @@ sub page_sign_in{
 
 }
 
+#from the information passed from the sign_in function, decide wheter the password is correct
 sub authenticate{
 	my $html_code = "";
 	my $authenticated = 0;
@@ -377,14 +421,11 @@ sub authenticate{
 		if (defined(@row)){
 			if ($password eq $row[0]){
 				$authenticated = 1;
-#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"valid\"></form>\n";
 			} else {
 				$authenticated = 0;
-#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"error\"></form>\n";			
 			}
 		} else {
 			$authenticated = 0;
-#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"error\"></form>\n";
 		}
 
 	}
@@ -392,57 +433,9 @@ sub authenticate{
 
 }
 
-sub authenticate1{
-	if (param('state')){
-		if (param('state') eq "unauthenticated"){
-			$html_code .= "<p><center>Username or password incorrect!</center></p>\n";
-		}
-	}
-	if (param('Username') && param('Password')){
-		$username = param('Username');
-		$password = param('Password');
-		print "<p><center>$username</center></p>\n";
-		print "<p><center>$password</center></p>\n";
 
-		my $stmt = qq(SELECT password from USERS WHERE username="$username";);
-		$sth = $dbh->prepare( $stmt );	
-		$rv = $sth->execute() or die $DBI::errstr;
-		if($rv < 0){
-			print $DBI::errstr;
-		}
-
-		my @row = $sth->fetchrow_array();
-
-		if (defined(@row)){
-			chomp($password);
-			chomp($username);
-			if ($password eq $row[0]){
-				$state = "browse";
-				param('state', $state);
-				hidden('password');
-			} else {
-				$state = "unauthenticated";
-				param('state', $state);	 
-				hidden('password');
-				#print "<p><center>Username or password incorrect!</center></p>\n";
-
-			}
-		} else {
-			$state = "unauthenticated";
-				param('state', $state);
-				hidden('password');
-			#print "<p><center>Username or password incorrect!</center></p>\n";
-		}
-
-	}
-	return $state;
-
-}
-
-#
-# HTML placed at bottom of every screen
-#
-
+#html code for the page navbar, this is before a user signs in. 
+#right hand side has "register" and "sign in" buttons
 sub page_navbar{
 
 	open (F, "navbar.txt") or die "cannot open navbar.txt";
@@ -456,6 +449,8 @@ sub page_navbar{
 	return $html_code;
 }
 
+#html code for the navbar when a user has logged in. the right handside of the navbar should
+#only have "sign out" button which directs back to the homepage
 sub page_navbar_login{
 
 	open (F, "navbar_login.txt") or die "cannot open navbar.txt";
@@ -469,8 +464,7 @@ sub page_navbar_login{
 	return $html_code;
 }
 
-
-
+#title page for the website, which is shown below the navbar.
 sub page_title{
 	open (F, "title.txt") or die "cannot open navbar.txt";
 	@html_lines = <F>;
@@ -482,6 +476,8 @@ sub page_title{
 	return $html_code;
 }
 
+#function for returning header html code. Modifications were made from the source code
+#added bootswatch source to for the formatting of the website
 sub page_header {
 	return header,
    		start_html(
@@ -494,6 +490,8 @@ sub page_header {
 # It includes all supplied parameter values as a HTML comment
 # if global variable $debug is set
 #
+#below the function prints the end of the html code
+#addition javascript stuff are added to enhance performance
 sub page_trailer {
 	my $html = "";
 	$html .= join("", map("<!-- $_=".param($_)." -->\n", param())) if $debug;
