@@ -38,7 +38,12 @@ print &page_header();
 $state = param('state') || "sign_in";
 
 $page_html .= page_navbar();
-$page_html .= display_profile();
+
+if ($state eq "profile"){
+	$page_html .= display_profile();
+} else {
+	$page_html .= display_users();
+}
 print "$page_html\n";
 
 print &page_trailer();
@@ -46,6 +51,7 @@ exit 0;
 
 #function that displays all users.
 sub display_users{
+	my $html_code = "";
 	my $n = param('n') || 0;
 
 	if (defined(param('Prev')) || defined(param('Next'))){
@@ -70,30 +76,30 @@ sub display_users{
 	my $i = $n;
 	param('n', $n);
 
-	print "<div class=\"container\" align=\"middle\">\n";
-	print "<div class=\"row\">\n";
+	$html_code .= "<div class=\"container\" align=\"middle\">\n";
+	$html_code .= "<div class=\"row\">\n";
 	while ($i < $n+10){
 	
-		print "<div class=\"panel panel-default\" style=\"width:400px\">\n";
-		print "  <div class=\"panel-heading\">\n";
-		print "     <div align=\"left\">\n";
-		print "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
-		print "       <h2><b>$students[$i]</b></h2>\n";
-		print "       </a>\n";
-		print "		</div>\n";
-		print "  </div>\n";
-		print "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
-		print "</div>\n";
+		$html_code .= "<div class=\"panel panel-default\" style=\"width:400px\">\n";
+		$html_code .= "  <div class=\"panel-heading\">\n";
+		$html_code .= "     <div align=\"left\">\n";
+		$html_code .= "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
+		$html_code .= "       <h2><b>$students[$i]</b></h2>\n";
+		$html_code .= "       </a>\n";
+		$html_code .= "		</div>\n";
+		$html_code .= "  </div>\n";
+		$html_code .= "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
+		$html_code .= "</div>\n";
 
 		$i += 1;
 	}	
-	print "</div>\n";
-	print "</div>\n";
+	$html_code .= "</div>\n";
+	$html_code .= "</div>\n";
 
-	print "<div class=\"row\">\n";
-	print "<div class=\"container\" align=\"middle\">\n";
+	$html_code .= "<div class=\"row\">\n";
+	$html_code .= "<div class=\"container\" align=\"middle\">\n";
 #	param('n', $n);
- 	print p,
+ 	$html_code .= p(
  		start_form, "\n",
 		hidden('n', $n-10),"\n",
 		hidden('n'),"\n",
@@ -105,10 +111,12 @@ sub display_users{
 		start_form,"\n",
 		hidden('n', $n),"\n",
  		submit('Next'),"\n",
- 		end_form, "\n",
- 		p, "\n";
-	print "</div>\n";
-	print "</div>\n";
+ 		end_form, "\n"
+ 	)."\n";
+	$html_code .= "</div>\n";
+	$html_code .= "</div>\n";
+
+	return $html_code;
 
 }
 
@@ -174,12 +182,6 @@ sub display_profile{
 		$index += 1;
 	}
 	
-#	push(@panel_info, $profile);
-#	push(@panel_info, $interest);
-
-#	return @panel_info;
-
-	#my $display_profile = &display_profile();
 	$html_code.= "	<div class=\"col-md-4\">
     <div class=\"panel panel-primary\" style=\"width:500px\">
   	  <div class=\"panel-heading\">
@@ -211,8 +213,7 @@ sub display_profile{
 
 
 sub page_sign_in{
-
-#	print "<p><center>$state</center></p>\n";
+	my $html_code = "";
 
 	open (F, "sign_in.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
@@ -220,20 +221,18 @@ sub page_sign_in{
 	foreach $line (@html_lines){
 		$html_code = $html_code.$line;
 	}
-
-	print "$html_code";
 	close F;
 
 	if (param('state')){
 		if (param('state') eq "unauthenticated"){
-			print "<p><center>Username or password incorrect!</center></p>\n";
+			$html_code .= "<p><center>Username or password incorrect!</center></p>\n";
 		}
 	}
 	if (param('Username') && param('Password')){
 		$username = param('Username');
 		$password = param('Password');
-		print "<p><center>$username</center></p>\n";
-		print "<p><center>$password</center></p>\n";
+#		print "<p><center>$username</center></p>\n";
+#		print "<p><center>$password</center></p>\n";
 
 		my $stmt = qq(SELECT password from USERS WHERE username="$username";);
 		$sth = $dbh->prepare( $stmt );	
@@ -250,23 +249,23 @@ sub page_sign_in{
 			if ($password eq $row[0]){
 				$state = "browse";
 				param('state', $state);
-				print	hidden('password');
+				hidden('password');
 			} else {
 				$state = "unauthenticated";
 				param('state', $state);	 
-				print	hidden('password');
-				print "<p><center>Username or password incorrect!</center></p>\n";
+				hidden('password');
+				#print "<p><center>Username or password incorrect!</center></p>\n";
 
 			}
 		} else {
 			$state = "unauthenticated";
 				param('state', $state);
-			print hidden('password');
-			print "<p><center>Username or password incorrect!</center></p>\n";
+				hidden('password');
+			#print "<p><center>Username or password incorrect!</center></p>\n";
 		}
 
 	}
-	return $state;
+	return $html_code;
 
 }
 
@@ -284,7 +283,7 @@ sub page_navbar{
 	}
 
 	close F;
-	print $html_code;
+	return $html_code;
 }
 
 
@@ -295,9 +294,8 @@ sub page_title{
 	foreach $line (@html_lines){
 		$html_code = $html_code.$line;
 	}
-
-	print "$html_code";
 	close F;
+	return $html_code;
 }
 
 
