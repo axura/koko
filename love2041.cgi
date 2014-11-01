@@ -31,14 +31,17 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 $debug = 1;
 $students_dir = "./students";
 
-$state = param('state') || "browse";
+$state = param('state') || "sign_in";
 
 #&sign_in();
 
 if ($state eq "profile" || $state eq "message"){
 	print show_profile();
-} else {
+} elsif ($state eq "browse"){
 	print display_users();
+}
+else {
+	print page_sign_in();
 }
 print page_trailer();
 #exit 0;	
@@ -245,7 +248,7 @@ sub display_profile{
 }
 
 
-sub sign_in{
+sub page_sign_in{
 	&page_navbar();
 	&page_title();
 
@@ -258,6 +261,39 @@ sub sign_in{
 
 	print "$html_code";
 	close F;
+
+	$username = param('Username');
+	$password = param('Password');
+	print "<p><center>$username</center></p>\n";
+	print "<p><center>$password</center></p>\n";
+
+	my $stmt = qq(SELECT password from USERS WHERE username="$username";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+
+	my @row = $sth->fetchrow_array();
+	foreach $item (@row){
+		print $item,"\n";
+	}
+
+	if (defined(@row)){
+		if ($password eq $row[0]){
+			my $mode = "authenticated";
+			param('state',$mode);
+			hidden('state');
+		} else {
+			$mode = "unauthenticated";
+			param('state',$mode);		 
+			hidden('state');
+		}
+	} else {
+		$mode = "unauthenticated";
+		param('state', $mode);
+		hidden('state');
+	}
 	
 }
 
