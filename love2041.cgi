@@ -41,7 +41,10 @@ $page_html .= page_navbar();
 
 if ($state eq "profile"){
 	$page_html .= display_profile();
-} else {
+} elsif ($state eq "sign_in"){
+	$page_html .= page_title();
+	$page_html .= page_sign_in();
+} elsif ($state eq "browse") {
 	$page_html .= display_users();
 }
 print "$page_html\n";
@@ -79,6 +82,16 @@ sub display_users{
 	$html_code .= "<div class=\"container\" align=\"middle\">\n";
 	$html_code .= "<div class=\"row\">\n";
 	while ($i < $n+10){
+		$stmt = qq(SELECT gender,birthdate, degree from USERS WHERE username="$students[$i]";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+	
+	my @row = $sth->fetchrow_array();
+
+
 	
 		$html_code .= "<div class=\"panel panel-default\" style=\"width:400px\">\n";
 		$html_code .= "  <div class=\"panel-heading\">\n";
