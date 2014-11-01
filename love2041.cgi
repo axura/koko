@@ -36,12 +36,19 @@ $page_html = "";
 print &page_header();
 
 $state = param('state') || "sign_in";
-
 $page_html .= page_navbar();
 
 if (param('Next') || param('Prev')){
 	$page_html .= display_users();
-} else {
+} elsif (param('Username') && param('Password')){
+		$login = &authenticate();
+		if ($login == 1){
+			$page_html = page_navbar_login();
+			$page_html .= login();
+		} else {
+			$page_html .= login_error();
+		}
+}else {
 	if (param('search')){
 		$page_html .= display_search();
 	} elsif ($state eq "profile"){
@@ -51,7 +58,9 @@ if (param('Next') || param('Prev')){
 	} elsif ($state eq "sign_in"){
 		$page_html .= page_title();
 		$page_html .= page_sign_in();
+	#	$page_html .= authenticate();
 	}
+
 }
 
 
@@ -59,6 +68,20 @@ print "$page_html\n";
 
 print &page_trailer();
 exit 0;	
+
+
+sub login{
+	my $html_code = "";
+	$html_code .= page_title();
+	$html_code .= "<center><h2 class=\"text-primary\">Welcome!</h2></center>\n";
+	return $html_code;
+}
+
+sub login_error{
+	my $html_code = "";
+	my $html_code .= page_title();
+	$html_code = "<center><h2>login error</h2></center>\n";
+}
 
 #function that displays all users.
 sub display_users{
@@ -315,8 +338,49 @@ sub page_sign_in{
 
 }
 
-sub authenticate{
 
+sub authenticate{
+	my $html_code = "";
+	my $authenticated = 0;
+	if (defined(param('state'))){
+		if(param('state') ne "sign_in"){
+			return;
+		}
+	}
+
+	if(param('Username') && param('Password')){
+		$username = param('Username');
+		$password = param('Password');
+		$html_code = hidden('Password');
+
+		my $stmt = qq(SELECT password from USERS WHERE username="$username";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
+
+		my @row = $sth->fetchrow_array();
+
+		if (defined(@row)){
+			if ($password eq $row[0]){
+				$authenticated = 1;
+#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"valid\"></form>\n";
+			} else {
+				$authenticated = 0;
+#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"error\"></form>\n";			
+			}
+		} else {
+			$authenticated = 0;
+#				$html_code .= "<form><input type=\"hidden\" name=\"login\" value=\"error\"></form>\n";
+		}
+
+	}
+	return $authenticated;
+
+}
+
+sub authenticate1{
 	if (param('state')){
 		if (param('state') eq "unauthenticated"){
 			$html_code .= "<p><center>Username or password incorrect!</center></p>\n";
@@ -325,8 +389,8 @@ sub authenticate{
 	if (param('Username') && param('Password')){
 		$username = param('Username');
 		$password = param('Password');
-#		print "<p><center>$username</center></p>\n";
-#		print "<p><center>$password</center></p>\n";
+		print "<p><center>$username</center></p>\n";
+		print "<p><center>$password</center></p>\n";
 
 		my $stmt = qq(SELECT password from USERS WHERE username="$username";);
 		$sth = $dbh->prepare( $stmt );	
@@ -379,6 +443,20 @@ sub page_navbar{
 	close F;
 	return $html_code;
 }
+
+sub page_navbar_login{
+
+	open (F, "navbar_login.txt") or die "cannot open navbar.txt";
+	my @html_lines = <F>;
+	my $html_code = "";
+	foreach $line (@html_lines){
+		$html_code = $html_code.$line;
+	}
+
+	close F;
+	return $html_code;
+}
+
 
 
 sub page_title{
