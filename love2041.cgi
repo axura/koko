@@ -19,6 +19,13 @@ $status = system("./database.pl");
 
 # print start of HTML ASAP to assist debugging if there is an error in the script
 print page_header();
+
+$state = param('state') || "sign_in";
+
+&page_navbar();
+if ($state ne "profile"){
+	&page_title();
+}
 my $driver   = "SQLite";
 my $database = "students.db";
 my $dsn = "DBI:$driver:dbname=$database";
@@ -31,51 +38,29 @@ my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
 $debug = 1;
 $students_dir = "./students";
 
-$state = param('state') || "sign_in";
-
 #&sign_in();
+print p, $state, p;
 
 if ($state eq "profile" || $state eq "message"){
-	print show_profile();
+	&show_profile();
 } elsif ($state eq "browse"){
-	print display_users();
+	&display_users();
+} else {
+	$state = &page_sign_in();
+	print "<p><center>$state</center></p>\n";
+#	print display_users();
 }
-else {
-	print page_sign_in();
-}
-print page_trailer();
-#exit 0;	
 
-sub browse_screen {
-	my $n = param('n') || 0;
-	my @students = glob("$students_dir/*");
-	$n = min(max($n, 0), $#students);
-	param('n', $n + 1);
-	my $student_to_show  = $students[$n];
-	my $profile_filename = "$student_to_show/profile.txt";
-	open my $p, "$profile_filename" or die "can not open $profile_filename: $!";
-	$profile = join '', <$p>;
-	close $p;
-	
-	return p,
-		start_form, "\n",
-		pre($profile),"\n",
-		hidden('n', $n + 1),"\n",
-		submit('Next student'),"\n",
-		end_form, "\n",
-		p, "\n";
-}
+	print "<p><center>$state</center></p>\n";
+
+if ($state eq "browse"){
+	print display_users();
+} 
+
+&page_trailer();
+exit 0;	
 
 sub show_profile{
-	open (F, "navbar.txt") or die "cannot open navbar.txt";
-	my @html_lines = <F>;
-	my $html_code = "";
-	foreach $line (@html_lines){
-		$html_code = $html_code.$line;
-	}
-
-	print "$html_code";
-	close F;
 
 	my @panels = &display_profile();
 	my $general = $panels[0];
@@ -128,8 +113,6 @@ sub display_users{
 		$n = 0;
 	}
 
-	&page_navbar();
-
 	my @students = glob("$students_dir/*");
 	foreach my $student (@students){
 		$student =~ s/\.\/students\///ig;
@@ -158,8 +141,8 @@ sub display_users{
 	print "</div>\n";
 	print "</div>\n";
 
-	print "<div class=\"container\" align=\"middle\">\n";
 	print "<div class=\"row\">\n";
+	print "<div class=\"container\" align=\"middle\">\n";
 #	param('n', $n);
  	print p,
  		start_form, "\n",
@@ -249,8 +232,8 @@ sub display_profile{
 
 
 sub page_sign_in{
-	&page_navbar();
-	&page_title();
+
+#	print "<p><center>$state</center></p>\n";
 
 	open (F, "sign_in.txt") or die "cannot open navbar.txt";
 	my @html_lines = <F>;
@@ -262,39 +245,50 @@ sub page_sign_in{
 	print "$html_code";
 	close F;
 
-	$username = param('Username');
-	$password = param('Password');
-	print "<p><center>$username</center></p>\n";
-	print "<p><center>$password</center></p>\n";
-
-	my $stmt = qq(SELECT password from USERS WHERE username="$username";);
-	$sth = $dbh->prepare( $stmt );	
-	$rv = $sth->execute() or die $DBI::errstr;
-	if($rv < 0){
-		print $DBI::errstr;
-	}
-
-	my @row = $sth->fetchrow_array();
-	foreach $item (@row){
-		print $item,"\n";
-	}
-
-	if (defined(@row)){
-		if ($password eq $row[0]){
-			my $mode = "authenticated";
-			param('state',$mode);
-			hidden('state');
-		} else {
-			$mode = "unauthenticated";
-			param('state',$mode);		 
-			hidden('state');
+	if (param('state')){
+		if (param('state') eq "unauthenticated"){
+			print "<p><center>Username or password incorrect!</center></p>\n";
 		}
-	} else {
-		$mode = "unauthenticated";
-		param('state', $mode);
-		hidden('state');
 	}
-	
+	if (param('Username') && param('Password')){
+		$username = param('Username');
+		$password = param('Password');
+		print "<p><center>$username</center></p>\n";
+		print "<p><center>$password</center></p>\n";
+
+		my $stmt = qq(SELECT password from USERS WHERE username="$username";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
+
+		my @row = $sth->fetchrow_array();
+
+		if (defined(@row)){
+			chomp($password);
+			chomp($username);
+			if ($password eq $row[0]){
+				$state = "browse";
+				param('state', $state);
+				print	hidden('password');
+			} else {
+				$state = "unauthenticated";
+				param('state', $state);	 
+				print	hidden('password');
+				print "<p><center>Username or password incorrect!</center></p>\n";
+
+			}
+		} else {
+			$state = "unauthenticated";
+				param('state', $state);
+			print hidden('password');
+			print "<p><center>Username or password incorrect!</center></p>\n";
+		}
+
+	}
+	return $state;
+
 }
 
 #
