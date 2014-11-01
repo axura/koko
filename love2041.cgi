@@ -39,7 +39,9 @@ $state = param('state') || "sign_in";
 
 $page_html .= page_navbar();
 
-if ($state eq "profile"){
+if (param('search')){
+	$page_html .= display_search();
+}elsif ($state eq "profile"){
 	$page_html .= display_profile();
 } elsif ($state eq "sign_in"){
 	$page_html .= page_title();
@@ -47,6 +49,8 @@ if ($state eq "profile"){
 } elsif ($state eq "browse") {
 	$page_html .= display_users();
 }
+
+
 print "$page_html\n";
 
 print &page_trailer();
@@ -224,6 +228,33 @@ sub display_profile{
 
 }
 
+sub display_search{
+	my $html_code = "";
+	my $search_string = param('search');
+	@results = ();
+
+	my @students = glob("$students_dir/*");
+	foreach my $student (@students){
+		$student =~ s/\.\/students\///ig;
+		if ($student =~ /$search_string/i){
+			push(@results, $student);
+#			$html_code .= "<p><center>$student</center></p>\n";
+		}
+	}
+
+	$html_code .= "<br><br>\n";
+	if (!defined(@results)){
+		$html_code .= "<center><h4 class=\"text-primary\">Sorry! There were no results found for <b>$search_string</b></h4></center>\n";
+	} else {
+		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string<b></h4></center>\n";
+	}
+
+	foreach $student (@results){
+		$html_code .= "<p class=\"text-primary\"><center>$student</center></p>\n";
+	}		
+
+	return $html_code;
+}
 
 sub page_sign_in{
 	my $html_code = "";
@@ -235,6 +266,11 @@ sub page_sign_in{
 		$html_code = $html_code.$line;
 	}
 	close F;
+	return $html_code;
+
+}
+
+sub authenticate{
 
 	if (param('state')){
 		if (param('state') eq "unauthenticated"){
@@ -278,7 +314,7 @@ sub page_sign_in{
 		}
 
 	}
-	return $html_code;
+	return $state;
 
 }
 
