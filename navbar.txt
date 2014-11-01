@@ -10,7 +10,7 @@
   <div class="navbar-collapse collapse navbar-responsive-collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a href="http://cgi.cse.unsw.edu.au/~ykan215/love2041.cgi">Browse</a>
+        <a href="love2041.cgi">Browse</a>
       </li>
       <li><a href="#">About Us</a></li>
     </ul>
@@ -19,7 +19,6 @@
     </form>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><b>Register</b></a></li>
-      <li><a href="#"><b>Sign In</b></a></li>
     </ul>
   </div>
 </div>
