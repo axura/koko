@@ -10,6 +10,8 @@
 use DBI;
 
 #setting up the connection to the database, or initialising if the table is not created
+#the following if statement checks if the database exists, if so will return so datbase
+#will not need to be created again.
 if (-e "students.db"){
 	#print "database already exists. No need to initialise\n";
 	exit(0);
