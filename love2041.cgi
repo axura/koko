@@ -39,15 +39,19 @@ $state = param('state') || "sign_in";
 
 $page_html .= page_navbar();
 
-if (param('search')){
-	$page_html .= display_search();
-}elsif ($state eq "profile"){
-	$page_html .= display_profile();
-} elsif ($state eq "sign_in"){
-	$page_html .= page_title();
-	$page_html .= page_sign_in();
-} elsif ($state eq "browse") {
+if (param('Next') || param('Prev')){
 	$page_html .= display_users();
+} else {
+	if (param('search')){
+		$page_html .= display_search();
+	} elsif ($state eq "profile"){
+		$page_html .= display_profile();
+	} elsif ($state eq "browse") {
+		$page_html .= display_users();
+	} elsif ($state eq "sign_in"){
+		$page_html .= page_title();
+		$page_html .= page_sign_in();
+	}
 }
 
 
@@ -87,25 +91,33 @@ sub display_users{
 	$html_code .= "<div class=\"row\">\n";
 	while ($i < $n+10){
 		$stmt = qq(SELECT gender,birthdate, degree from USERS WHERE username="$students[$i]";);
-	$sth = $dbh->prepare( $stmt );	
-	$rv = $sth->execute() or die $DBI::errstr;
-	if($rv < 0){
-		print $DBI::errstr;
-	}
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
 	
-	my @row = $sth->fetchrow_array();
+		my @row = $sth->fetchrow_array();
 	
-	$html_code .= "<div class=\"panel panel-default\" style=\"width:400px\">\n";
-	$html_code .= "  <div class=\"panel-heading\">\n";
-	$html_code .= "     <div align=\"left\">\n";
-	$html_code .= "	      <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
-	$html_code .= "       <h2><b>$students[$i]</b></h2>\n";
-	$html_code .= "       </a>\n";
-	$html_code .= "		</div>\n";
-	$html_code .= "  </div>\n";
-	$html_code .= "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";
-	$html_code .= "</div>\n";
-
+		$html_code .= "<div class=\"panel panel-default\" style=\"width:700px\">\n";
+		$html_code .= "  <div class=\"panel-heading\" align=\"left\">\n";
+		$html_code .= "	   <a href=\"love2041.cgi?state=profile&user=$students[$i]\"\n";
+		$html_code .= "      <h3><b>$students[$i]</b></h3>\n";
+		$html_code .= "    </a>\n";
+		$html_code .= "  </div>\n";
+		$html_code .= "  <div class=\"panel-body\">\n";
+		$html_code .= "  <div style=\"float:left\">\n";
+		$html_code .= "  <center><img src=\"./students/$students[$i]/profile.jpg\"></centre>\n";		
+		$html_code .= "  </div>\n";
+		$html_code .= "  <br><br>\n";
+		$html_code .= "  <ul>\n";
+		$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
+		$html_code .= "    <p class=\"text-primary\">Gender: $row[1] </p>\n";
+		$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
+		$html_code .= "  </ul>\n";
+		$html_code .= "  </div>\n";
+		$html_code .= "</div>\n";
+	
 		$i += 1;
 	}	
 	$html_code .= "</div>\n";
@@ -114,13 +126,15 @@ sub display_users{
 	$html_code .= "<div class=\"row\">\n";
 	$html_code .= "<div class=\"container\" align=\"middle\">\n";
 #	param('n', $n);
- 	$html_code .= p(
+#	$state = "browse";
+#	$html_code .= param('state',$state);
+  	$html_code .= p(
  		start_form, "\n",
 		hidden('n', $n-10),"\n",
 		hidden('n'),"\n",
 		hidden('user'),"\n",
-		hidden('prev'),"\n",
-		hidden('next'),"\n",
+		hidden('Prev'),"\n",
+		hidden('Next'),"\n",
  		submit('Prev'),"\n",
 		end_form,"\n",
 		start_form,"\n",
@@ -244,7 +258,7 @@ sub display_search{
 	if (!defined(@results)){
 		$html_code .= "<center><h4 class=\"text-primary\">Sorry! There were no results found for <b>$search_string</b></h4></center>\n";
 	} else {
-		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string</b></h4></center>\n";
+		$html_code .= "<center><h4 class=\"text-primary\">Results for searching for <b>$search_string</b></h4></center><br><br>\n";
 	}
 
 	if (defined(@results)){
@@ -263,7 +277,7 @@ sub display_search{
 		$gender = $row[0];
 
 			$html_code .= "<div class=\"panel panel-default\" style=\"width:700px\">\n";
-			$html_code .= "  <div class=\"panel-heading\">\n";
+			$html_code .= "  <div class=\"panel-heading\" align=\"left\">\n";
 			$html_code .= "	   <a href=\"love2041.cgi?state=profile&user=$student\"\n";
 			$html_code .= "      <h3><b>$student</b></h3>\n";
 			$html_code .= "    </a>\n";
@@ -275,6 +289,7 @@ sub display_search{
 			$html_code .= "  <br><br>\n";
 			$html_code .= "  <ul>\n";
 			$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
+			$html_code .= "    <p class=\"text-primary\">Gender: $row[1] </p>\n";
 			$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
 			$html_code .= "  </ul>\n";
 			$html_code .= "  </div>\n";
@@ -376,7 +391,6 @@ sub page_title{
 	close F;
 	return $html_code;
 }
-
 
 sub page_header {
 	return header,
