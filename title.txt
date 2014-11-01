@@ -1,4 +1,4 @@
 <div class="jumbotron">
-  <h1>UNSW 2041 Friend Searcher</h1>
-  <p>UNSW Kensington and COFA campus social network</p>
+  <center><h1>UNSW 2041 Friend Searcher</h1></center>
+  <center><p class="text-primary">UNSW Kensington and COFA campus social network</p></center>
 </div>
