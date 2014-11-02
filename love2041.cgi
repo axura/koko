@@ -60,14 +60,14 @@ if (param('Next') || param('Prev')){
 		}
 }
 
-if ($unsigned == 1 && $error == 0){
+if ($unsigned == 1){
 	$page_title = page_navbar();
 } else {
 	$page_title = page_navbar_login();
 }
 	$page_html = $page_title.$page_html;
 
-if ($unsigned == 1){
+if ($unsigned == 1 && $error == 0){
 	if (param('search')){
 		$page_html .= display_search();
 	} elsif ($state eq "profile"){
