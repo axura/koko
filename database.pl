@@ -57,20 +57,18 @@ if($rv < 0){
 $stmt = qq(CREATE TABLE PREFERENCES
       (ID INT PRIMARY KEY,
        username       				TEXT,
-       height_min         			TEXT,
-       height_max      				TEXT,
+       height	         			TEXT,
        weight           			TEXT,
        gender           			TEXT,
        hair_colours          		TEXT,
-       age_min			           	TEXT,
-	   age_max						TEXT
+       age				           	TEXT
       ););
 $rv = $dbh->do($stmt);
 if($rv < 0){
    print $DBI::errstr;
-} else {
-   print "Table PREFERENCES created successfully\n";
-}
+}# else {
+#   print "Table PREFERENCES created successfully\n";
+#}
 
 #opening up all the usernames in students folder. 
 opendir $students_folder, 'students' or die "couldn't open folder students";
@@ -105,6 +103,25 @@ sub preferences{
 	
 	return $entry;
 }
+
+sub findMin{
+	my $entry = $line;
+	my $index = $file_index + 2;
+	$entry = $lines[$index];
+	chomp($entry);
+	$entry =~ s/^\s*//ig;
+	return $entry;
+}
+
+sub findMax{
+	my $entry = $line;
+	my $index = $file_index + 4;
+	$entry = $lines[$index];
+	chomp($entry);
+	$entry =~ s/^\s*//ig;
+	return $entry;
+}
+
 
 #hashtable used for checking the entries that require min and max
 %min_max_fields = (
@@ -173,6 +190,8 @@ foreach $user (@folders){
 	@lines = <File>;
 	$length = @lines;
 	$file_index = 0;
+	push(@fields, 'username');
+	push(@values, $user);
 	foreach $line (@lines){
 		if($line =~ /^([_a-z].*)/i){
 			$curr_field = $1;
@@ -183,14 +202,17 @@ foreach $user (@folders){
 #				print "$user: $curr_field - $insert_field\n";
 			} else {
 				my $field_range = $curr_field;
-				print "$user: $field_range\n";
+				my $max = &findMax();
+				my $min = &findMin();
+				$insert_field = $min."..".$max;
+#				print "$user: $field_range - $min.. $max\n";
 			}
 		}
 
 		if (defined($curr_field) && defined($insert_field)){
 			$pre_entries{$curr_field} = $insert_field;
 			push(@fields, $curr_field);
-			push(@fields, $insert_field);
+			push(@values, $insert_field);
 		}
 
 		$file_index += 1;
@@ -198,6 +220,13 @@ foreach $user (@folders){
 		$insert_field = undef;
 			
 	}
+
+	$id_string = join(",", @fields);
+	$value_string = join("', '", @values);
+	$value_string = "'".$value_string."'";	
+	$stmt = qq(INSERT INTO PREFERENCES ($id_string) VALUES ($value_string ););
+	$rv = $dbh->do($stmt) or die $DBI::errstr;
+
 		
 	close File;	
 
