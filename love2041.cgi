@@ -67,6 +67,7 @@ if ($unsigned == 1){
 }
 	$page_html = $page_title.$page_html;
 
+#if there is no error from login then display either of the following pages
 if ($unsigned == 1 && $error == 0){
 	if (param('search')){
 		$page_html .= display_search();
