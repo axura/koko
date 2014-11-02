@@ -56,7 +56,7 @@ if (param('Next') || param('Prev')){
 			$unsigned = 0;
 		} else {
 			$page_html .= login_error();
-			$unsigned = 0;
+			$unsigned = 1;
 		}
 }
 
@@ -382,7 +382,7 @@ sub display_profile{
 	$html_code.= "	<div class=\"col-md-4\">
     <div class=\"panel panel-primary\" style=\"width:500px\">
   	  <div class=\"panel-heading\">
-        <h3 class=\"panel-title\">Interests</h3>
+        <h3 class=\"panel-title\">Personal Info</h3>
   	  </div>
       <div class=\"panel-body\">
 	    <p class=\"text-info\">$profile</p>
@@ -395,7 +395,7 @@ sub display_profile{
 	$html_code.= "<div class=\"col-md-4\">
   <div class=\"panel panel-primary\" style=\"width:500px\">
   	<div class=\"panel-heading\">
-      <h3 class=\"panel-title\">Personal Info</h3>
+      <h3 class=\"panel-title\">Interests</h3>
   	</div>
     <div class=\"panel-body\">
 	  <p class=\"text-info\">$interest</p>
