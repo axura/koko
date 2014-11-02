@@ -54,6 +54,24 @@ if($rv < 0){
   # print "Table created successfully\n";
 #}
 
+$stmt = qq(CREATE TABLE PREFERENCES
+      (ID INT PRIMARY KEY,
+       username       				TEXT,
+       height_min         			TEXT,
+       height_max      				TEXT,
+       weight           			TEXT,
+       gender           			TEXT,
+       hair_colours          		TEXT,
+       age_min			           	TEXT,
+	   age_max						TEXT
+      ););
+$rv = $dbh->do($stmt);
+if($rv < 0){
+   print $DBI::errstr;
+} else {
+   print "Table PREFERENCES created successfully\n";
+}
+
 #opening up all the usernames in students folder. 
 opendir $students_folder, 'students' or die "couldn't open folder students";
 
@@ -80,9 +98,26 @@ sub multiItemfield{
 	return $listOfEntries;
 }
 
+
+sub preferences{
+	my $entry = $line;
+	my $index = $file_index + 1;
+	
+	return $entry;
+}
+
+#hashtable used for checking the entries that require min and max
+%min_max_fields = (
+	"height" => "height",
+	"weight" => "weight",
+	"age"	 =>	"age",
+);
+
 #with the list of users given from the folder names. it will traverse through each folder, 
 #loop will open the profile.txt in each file, to read for the fields. 
 #Once it has found a new field, it will call the function to set the items as a string
+
+
 foreach $user (@folders){
 	#check if it is a valid username, otherwise go to next folder
 	if ($user =~ /^[^a-z0-9].*$/ig){
@@ -126,9 +161,45 @@ foreach $user (@folders){
 	
 		
 #printf "%s: %s\n", $id_string, $value_string;
-
-
 	close(File);
+
+	%pre_entries = ();
+	$file_location = "students/".$user."/preferences.txt";
+	#strings passed into the insert instruciton for SQL
+	@fields = ();
+	@values = ();
+
+	open(File, "$file_location") or die "cannot open the profile text for $user\n";
+	@lines = <File>;
+	$length = @lines;
+	$file_index = 0;
+	foreach $line (@lines){
+		if($line =~ /^([_a-z].*)/i){
+			$curr_field = $1;
+			$curr_field =~ s/:\s*$//ig;
+
+			if (!defined($min_max_fields{$curr_field})){
+				$insert_field = &multiItemfield();			
+#				print "$user: $curr_field - $insert_field\n";
+			} else {
+				my $field_range = $curr_field;
+				print "$user: $field_range\n";
+			}
+		}
+
+		if (defined($curr_field) && defined($insert_field)){
+			$pre_entries{$curr_field} = $insert_field;
+			push(@fields, $curr_field);
+			push(@fields, $insert_field);
+		}
+
+		$file_index += 1;
+		$curr_field = undef;
+		$insert_field = undef;
+			
+	}
+		
+	close File;	
 
 }
 
