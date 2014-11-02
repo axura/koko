@@ -91,7 +91,8 @@ sub login{
 	my $html_code = "";
 	$html_code .= page_title();
 	$html_code .= "<center><h2 class=\"text-primary\">Welcome!</h2></center>\n";
-	$html_code .= find_matches();
+	@matches = find_matches();
+	$html_code .= display_matches();
 	return $html_code;
 }
 
@@ -122,6 +123,7 @@ sub finding_match{
 sub find_matches{
 	my $username = param('Username');
 	my $html_code = "";
+	my @matches = ();
 
 	my $stmt = qq(SELECT gender from PREFERENCES WHERE username="$username";);
 	$sth = $dbh->prepare( $stmt );	
@@ -132,14 +134,14 @@ sub find_matches{
 
 	@row = $sth->fetchrow_array();
 	$pre_gender = $row[0];
-	$html_code .= "<center><p>$username prefers: $pre_gender</p></center>\n";
+#	$html_code .= "<center><p>$username prefers: $pre_gender</p></center>\n";
 
 	my @students = glob("$students_dir/*");
 	foreach my $student (@students){
 		$student =~ s/\.\/students\///ig;
 	}
 
-	$html_code .= "<center><p><b>found matches:</b></p></center>\n";
+#	$html_code .= "<center><p><b>found matches:</b></p></center>\n";
 
 	foreach $student (@students){
 		$stmt = qq(SELECT gender from USERS WHERE username="$student";);
@@ -150,12 +152,59 @@ sub find_matches{
 		}
 		@row = $sth->fetchrow_array();
 		if ($pre_gender eq $row[0]){
-			$html_code .= "<center><p>$student: $row[0]</p></center>\n";
+#			$html_code .= "<center><p>$student: $row[0]</p></center>\n";
+			push(@matches, $student);
 		}
 	}
 
+	return @matches;
 
-	return $html_code
+}
+
+
+sub display_matches{
+	my $html_code = "";
+	my @display_matches = @matches;
+
+	#writing the html code for each of the profiles in a panel
+	$html_code .= "<div class=\"container\" align=\"middle\">\n";
+	$html_code .= "<div class=\"row\">\n";
+
+	foreach $student (@display_matches) {
+		$stmt = qq(SELECT gender,birthdate, degree from USERS WHERE username="$student";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
+	
+		my @row = $sth->fetchrow_array();
+	
+		$html_code .= "<div class=\"panel panel-default\" style=\"width:700px\">\n";
+		$html_code .= "  <div class=\"panel-heading\" align=\"left\">\n";
+		$html_code .= "	   <a href=\"love2041.cgi?state=profile&user=$student\"\n";
+		$html_code .= "      <h3><b>$student</b></h3>\n";
+		$html_code .= "    </a>\n";
+		$html_code .= "  </div>\n";
+		$html_code .= "  <div class=\"panel-body\">\n";
+		$html_code .= "  <div style=\"float:left\">\n";
+		$html_code .= "  <center><img src=\"./students/$student/profile.jpg\"></centre>\n";		
+		$html_code .= "  </div>\n";
+		$html_code .= "  <br><br>\n";
+		$html_code .= "  <ul>\n";
+		$html_code .= "    <p class=\"text-primary\">Gender: $row[0] </p>\n";
+		$html_code .= "    <p class=\"text-primary\">Birthdate: $row[1] </p>\n";
+		$html_code .= "    <p class=\"text-primary\">Degree: $row[2] </p>\n";
+		$html_code .= "  </ul>\n";
+		$html_code .= "  </div>\n";
+		$html_code .= "</div>\n";
+	
+		$i += 1;
+	}	
+	$html_code .= "</div>\n";
+	$html_code .= "</div>\n";
+
+	return $html_code;
 
 }
 
