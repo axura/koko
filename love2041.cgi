@@ -56,11 +56,11 @@ if (param('Next') || param('Prev')){
 			$unsigned = 0;
 		} else {
 			$page_html .= login_error();
-			$unsigned = 1;
+			$error = 1;
 		}
 }
 
-if ($unsigned == 1){
+if ($unsigned == 1 && $error == 0){
 	$page_title = page_navbar();
 } else {
 	$page_title = page_navbar_login();
