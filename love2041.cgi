@@ -91,6 +91,7 @@ sub login{
 	my $html_code = "";
 	$html_code .= page_title();
 	$html_code .= "<center><h2 class=\"text-primary\">Welcome!</h2></center>\n";
+	$html_code .= find_matches();
 	return $html_code;
 }
 
@@ -116,6 +117,46 @@ sub finding_match{
 	if($rv < 0){
 		print $DBI::errstr;
 	}
+}
+
+sub find_matches{
+	my $username = param('Username');
+	my $html_code = "";
+
+	my $stmt = qq(SELECT gender from PREFERENCES WHERE username="$username";);
+	$sth = $dbh->prepare( $stmt );	
+	$rv = $sth->execute() or die $DBI::errstr;
+	if($rv < 0){
+		print $DBI::errstr;
+	}
+
+	@row = $sth->fetchrow_array();
+	$pre_gender = $row[0];
+	$html_code .= "<center><p>$username prefers: $pre_gender</p></center>\n";
+
+	my @students = glob("$students_dir/*");
+	foreach my $student (@students){
+		$student =~ s/\.\/students\///ig;
+	}
+
+	$html_code .= "<center><p><b>found matches:</b></p></center>\n";
+
+	foreach $student (@students){
+		$stmt = qq(SELECT gender from USERS WHERE username="$student";);
+		$sth = $dbh->prepare( $stmt );	
+		$rv = $sth->execute() or die $DBI::errstr;
+		if($rv < 0){
+			print $DBI::errstr;
+		}
+		@row = $sth->fetchrow_array();
+		if ($pre_gender eq $row[0]){
+			$html_code .= "<center><p>$student: $row[0]</p></center>\n";
+		}
+	}
+
+
+	return $html_code
+
 }
 
 #function that displays all users. In one page it will display 10 users,
