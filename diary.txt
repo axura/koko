@@ -1,0 +1,606 @@
+commit 608dbb0bf3dfe03343376115c709d6e2f544e4a4
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:24:23 2014 +1100
+
+    updated love2041.cgi for submission.
+
+commit b1c47cc4481e64144cbdd91dae947a26d2459f80
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:21:51 2014 +1100
+
+    updating on main function
+
+commit 446df0e3bfbdb8a261f53e62ee43b2cb9e845256
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:20:25 2014 +1100
+
+    further update on the main function for love2041.cgi
+
+commit c829788f1978a36a00236acd80261422c71fdbea
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:18:48 2014 +1100
+
+    update on fixing a bug with the navbar
+
+commit 86c1a12b2d5797ff0db2425d90cde1d51b06c0d9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:12:55 2014 +1100
+
+    added navbar_login.txt, the navbar after the user has logged in
+
+commit 38dc1525520639c994fd566fb33db35e7ecca245
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:10:20 2014 +1100
+
+    added sign_in_error.txt, the file containing the html file that is used for priting the sign in box with wrong username and password details
+
+commit 6e4baef2b9a630385d14b9788ad31ad84d20a175
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:08:06 2014 +1100
+
+    update on sign_in.txt
+
+commit 6542a6df1b185c7447737402ecdd63e8290c6290
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 18:07:11 2014 +1100
+
+    finalised comments for love2041.cgi
+
+commit fc340a9943eacfec522e469c3462266c0f5ed978
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 17:32:31 2014 +1100
+
+    have finished the page for when signing in. gender matches are now shown
+
+commit 31c73eb48c601f6cce329bfab27d2061b94216be
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 17:17:18 2014 +1100
+
+    find_matches() function is added to the end of login function, so that the user will see the matches when logging in. Has verified that the names match the preferred gender
+
+commit 3ec718b8dada1916ac9c76b9afc8865d7251753f
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 16:36:48 2014 +1100
+
+    added new comments for additions in database.pl
+
+commit 3cd14ae1fbb5afbecdc8aec0c2a50f6abeba30b8
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 16:30:32 2014 +1100
+
+    completed the initialisation for the database for PREFERENCES table, stores the username and their preferences for a friend
+
+commit 37368f0c27aef7e934abf2d8da56da74dbbe7e9c
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 16:07:40 2014 +1100
+
+    added functionality for storing preferences of a user in database.pl
+
+commit a96d5487ca38a88d299962d2b2e04463e2b4974f
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 10:31:50 2014 +1100
+
+    made some further comment changes for database.pl. Should be done for now
+
+commit cba58c7865f870b03efd6932bd122b8fb68ef399
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 10:31:00 2014 +1100
+
+    added comments and header comment for love2041.cgi, deleted non-used function authenticate1
+
+commit b332c85d65dec3d7b415161a75b1a624ecdf7db0
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 10:04:58 2014 +1100
+
+    added comments for database.pl
+
+commit 4ff120665c0ba647061d47370befa72161d22390
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 02:23:35 2014 +1100
+
+    made some changes to the pages for showing the pages of logging in and logging out. navbar still needs to be fixed
+
+commit ae1f4e18401733d689a42e1845c9fe1d256a00b2
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 01:59:30 2014 +1100
+
+    changed format of title.txt
+
+commit 5ef102776a713e54dac55ca3e72622e8234fc5ad
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 01:58:30 2014 +1100
+
+    added new functions for login and login error pages. the authenticate function is able to correctly check whether the password is correct
+
+commit bff2ca3cc9904b5c95a6b36a479bc409172c624e
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Nov 2 00:00:23 2014 +1100
+
+    updated love2041.cgi, putting together the module functions for search, showing profile, browsing users and loging page. login has yet to be verified
+
+commit 445b78109547d4f2428c172111d4d78aa4ed58bd
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 22:47:23 2014 +1100
+
+    finished the search function. when clicking on the username for the displayed results, will direct to the user profile page
+
+commit 2a7cfddde8da7a0d66267b757f04fa00e1d0e87f
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 22:30:07 2014 +1100
+
+    search is able to now display the users that are being searched for in a smiliar style of browsing users
+
+commit b298a75c062ec4bff404fb8b42110c18168aa051
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 22:01:00 2014 +1100
+
+    enabled search function in navbar.txt. updated love2041.cgi, added in a function for checking searched items in the navbar. added printing html code to check that the function is able to select the correct users.
+
+commit 7bebd41ddf18ba950043ab63fe63fde41a6afad5
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 21:18:41 2014 +1100
+
+    updated navbar.txt, changed some of the format
+
+commit ff0a28379c47b76db2ad265cc4ffb508d68346b3
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 21:17:32 2014 +1100
+
+    cleaned up code for sign up page and title page
+
+commit 8456152b72a89e764f93dc890f15a1b0196d3174
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 21:04:07 2014 +1100
+
+    cleaned up code for displaying users. multiple user and single profile display is cleaned up
+
+commit 7c88cbbe147ceb6659f569f682eb788a852b50ed
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 20:49:11 2014 +1100
+
+    removed display_profile function. cleaning up the code
+
+commit 20c5c9a7eb39dbd59ca22be8123a0538cb4c42e3
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 18:14:30 2014 +1100
+
+    updated love2041.cgi. still have not resolved the issue for logging in
+
+commit 672a92d22448e37b111714c9048ed4c10bd95813
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 15:39:35 2014 +1100
+
+    able to read the username and password inputs. added in the a new mode input. need to fix the navbar to two versions, signed in and non-signed in
+
+commit faf6f2c296783c8c30fc148a4159ba8225a59faf
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 13:40:32 2014 +1100
+
+    added title.txt, which contains the html code for printing out the title page, when allowing sign in
+
+commit c287b08b69becff803b3b40a6cb5273b68f7a860
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 13:38:43 2014 +1100
+
+    added a file sign_in.txt, this file is used to load the page for signing in. the format is only done for now, there is also a title bar included on the sign in page
+
+commit 9cbed718161e2f2460942afd0bcc7c2abc07355a
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 13:34:58 2014 +1100
+
+    made some changes to the navbar.txt file, instead of the link going to cse ykan215, it will search straight for the love2041.cgi file.
+
+commit 14566f790786c721420489b595cc588b35012661
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 13:31:41 2014 +1100
+
+    fixed bugs in love2041.cgi. Added links, so now the website is in brower mode on default. Added links for the profile tiles, able to click on the icons and display the profiles now. Scrolling buttons are working fine, though formating doesnt look nice
+
+commit a24d60e71387088dcc9820e7ea424de7a782671c
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Nov 1 11:43:52 2014 +1100
+
+    tried fixing a bug with the scrolling
+
+commit a556254b4af663343065decc081f50b70c72fd80
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 22:48:36 2014 +1100
+
+    retried to do the buttons for scrolling left and right
+
+commit 927376103007c1cde28339f243f17b27a38383f3
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 21:40:21 2014 +1100
+
+    updated love2041.cgi the function for scrolling profile users
+
+commit 414d7adb64de9b09e3a0cb5e330ff4ed17ed1578
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 20:29:45 2014 +1100
+
+    added a new function called page_title, which is used for sdisplaying the title of the website
+
+commit 0cc8b6ada5b5ff6b7e9996fe2d6280d13b90ba89
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 20:21:22 2014 +1100
+
+    updated love2041.cgi, can now jump to another page showing users
+
+commit af4c0c435fe8a1cbdb630a06586bade5ab7df859
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 18:38:13 2014 +1100
+
+    updated navbar.txt
+
+commit c4097ecfa9e6d9444a133831c8235bf3b82b5cd1
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 18:35:53 2014 +1100
+
+    updating love2041.cgi.
+
+commit 938e80247de9bf911ee37941bdf4d20237b007bd
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 13:57:36 2014 +1100
+
+    changed some links, adding the modules together for displaying profile and displaying 10 users. scrolling through users still does not work yet
+
+commit a288a8f249651a0f90d7f46609c4ff3ef7d782c2
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 11:32:06 2014 +1100
+
+    updated the page for browsing users, trying to use container class
+
+commit e03d4d15536e8beb7933ae81880af6fc41877ceb
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 11:02:31 2014 +1100
+
+    made changes to love2041.cgi. There is now able to display 10 users now.
+
+commit 6afa1662ed463eb1c2429b8dc9193f711cda3ad0
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 10:09:42 2014 +1100
+
+    updating the profile formatting
+
+commit c5206d4c5d376a5134993ca3fda8951ba9e848d6
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 01:18:09 2014 +1100
+
+    updated the button for message me, format has changed
+
+commit 7ffac60e20f08517f81b0032f2179e2c22703c76
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 31 00:35:39 2014 +1100
+
+    updating love2041.cgi for formatting
+
+commit 116f56ef9c398a63548b2c9c0383c8c0f8332069
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 23:09:02 2014 +1100
+
+    changed some options on navbar.txt. there was some issues with alignment on the navbar. Now contains two buttons: Register and Sign in instead of the sign in fields.
+
+commit ad0a62a67df13eb6faaaee230c8761beadc82e09
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 22:59:00 2014 +1100
+
+    added new field inputs to the navbar. there is now a button and two fields for signing in
+
+commit bbd91de6b622d3bfcda2444183259d15c70ea19e
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 22:30:35 2014 +1100
+
+    updated the panels for the profile. still cannot align them properly. for now will be working on another page, for displaying the thumbnails
+
+commit f072d19259c950674d74e304b1a1070663a014c2
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 21:58:29 2014 +1100
+
+    split the info into two parts, general info and interests, have put them into two panels. The panels still need to be aligned properly however
+
+commit 623541471b2d434b9c0b4e6affd9d51131453324
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 21:42:48 2014 +1100
+
+    changes to the formatting of the profile website, added new modules. Decided not to use profile_head_panel.txt since there are variables used
+
+commit bf07099fc2884f61b84c577d49c79d1ad9d0d19e
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 19:39:25 2014 +1100
+
+    changed the header html code in love2041.cgi. Changed the navbar to the yeti template found in bootswatch. The navbar is finally working now
+
+commit 36e952cc9fb3a70393cf5a70e7a1f4263a0d4e5a
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 17:27:30 2014 +1100
+
+    updated navbar.txt. navbar not working could be due to having too many items on the navbar
+
+commit bb0f9b57aa157b15d7bfdad9f1944fdb021e6232
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 17:13:54 2014 +1100
+
+    added the text file navbar.txt which contains the html code for the navbar. this has yet to be tested. the html file was taken from bootstrap example, will be modified for assignment later
+
+commit dd370c39c1e90a5d156bb252695565fdb4d8fb2c
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 17:12:02 2014 +1100
+
+    made changes to test3.pl, making program open a file called navbar.txt which contains the html code for a navbar example
+
+commit da52bca69f942c7db0d3b7a5d4afd7ab1d7a5993
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 16:52:58 2014 +1100
+
+    adding a new file test3.pl for testing retrieving every 10 users
+
+commit e7897eb00d41d29891d1d7e2ac6e9a05d6f0d281
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 16:50:58 2014 +1100
+
+    updating test2.pl
+
+commit 650bb8e5453b0caaec9d79892b60a95ae317a05f
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 14:56:15 2014 +1100
+
+    updated formatting and html printing errors for love2041.cgi
+
+commit 9180a848112b72629388bb774b5b9df3eada24c9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 14:28:15 2014 +1100
+
+    able to browse through the profiles now. Added an additional button called Message which when clicked will show the profile of the next user
+
+commit ece8a16ab221a50f3a0c869b0b6e2eb033cfa6fc
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 00:27:34 2014 +1100
+
+    updated love2041.cgi formatting,indentation added and text type should have changed. navbar is still not working. may start considering about subset one and then go back to the formatting later
+
+commit 5bbf9da21df10801b269b38723888394497c1066
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Thu Oct 30 00:11:21 2014 +1100
+
+    added formatting changes to the text of the profile for a user
+
+commit 943ec5aacb82ce3c4fa3dbef9228a7e9a713a293
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 23:11:17 2014 +1100
+
+    able to print out the profile for one user. need to format the text of the profile however
+
+commit d0e93e0cfd897c887311e69eb62fed26af2e3d51
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 22:08:56 2014 +1100
+
+    readded test2.pl which attempted to use a function to fetch a whole column
+
+commit b5719d83745e89097df12e4f7022617a56ff7bfb
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 22:07:56 2014 +1100
+
+    removing test2.pl
+
+commit b5710f39804aaf54da2b01a4a40d2dc458344fcf
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 22:06:32 2014 +1100
+
+    tried another function for the username column, still not working. verfiied that the profile is entered correctly
+
+commit 88507b1e1d7406428afc74f654fd0ef299496302
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 17:52:57 2014 +1100
+
+    added test2.pl file which is used to testing display_profile function. need to be able to fetch the usernames from sqlite
+
+commit 88f72daa47512a876b39f2779b52a36870172614
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 15:19:03 2014 +1100
+
+    updated love2041.cgi format
+
+commit a377aff0b7fc63384ab600d4f203712c53441024
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 29 12:18:10 2014 +1100
+
+    still cannot display correctly the entries via the display_profile function. Have added some formatting buttons
+
+commit a075abaadd90c4a59e965873e1fe83d4f226151a
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Tue Oct 28 22:46:18 2014 +1100
+
+    added a new file called test1.pl. this was used for testing a program that could extract out the fields for each user to get the data that will be displayed on the profile
+
+commit 81e27e4c0dcb55eca17633a91e216d3c6c7ed3ba
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 15:50:44 2014 +1100
+
+    able to fix the bug that wasnt loading the webpage when the database initialisation was added.
+
+commit b3482682946941d915d8a6ccf40376e4aa6da5a9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 15:06:18 2014 +1100
+
+    removed some print statements. fixing a bug for loading the webpage with wrong header
+
+commit f9b930baeafcc94137341f7764eaeb3aad78aa08
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 15:00:30 2014 +1100
+
+    love2041.cgi can now run the database.pl program
+
+commit f6365820d23519e428531b03a8e35c0ed39c48f1
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 14:51:46 2014 +1100
+
+    added a statement at the beginning of database.pl to check whether the database students.db exists. Dont have to always manually remove the database anymore.
+
+commit 612ebdc8f4ff39c9eb66d675408ab66b26bb0cfc
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 14:38:50 2014 +1100
+
+    fixed up some code for database.pl. It is able to pass through the loops checking for files with no problem now
+
+commit 5ab68fc96fb551aa7e334bfe37322a2ea013442b
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Mon Oct 27 14:13:50 2014 +1100
+
+    changed multiItemField function. it is not optimised
+
+commit 80528e398ff7c6798ac8c99fdead39b6af1936a2
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 04:44:15 2014 +1100
+
+    attempted to insert into the table. however, was recieving errors, in the lines where the insert command was executed. I intend to check online tomorrow. Alternatively, asking a peer may help. the only things that are left to do for database is to get the information all into the table now.
+
+commit b0511f73bb552108dab602847a051ee6f03c5e63
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 04:10:32 2014 +1100
+
+    added the instruction for the table users, which stores the entire information extracted from the profile
+
+commit 0fcf181e6f9ed5376a9c4d29fecf48527ca577a3
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 03:48:07 2014 +1100
+
+    turns out the multiline field function works for all cases. think that it is the first one that jumps to it, very strange, since i thought it would go to the previous if statements first. but taken out the single line field function, code looks cleaner now
+
+commit 566a68beb676f4e8f849ec72192a3c8c6e6f3496
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 03:41:59 2014 +1100
+
+    changed the printing flags, wanting to check if only one function is needed
+
+commit 378c70999b149ee3978538ac3c0004c5ee2dc8e1
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 03:31:41 2014 +1100
+
+    while merging found a bug, not sure what was rwong with original code, by test.pl demonstrates that it is correct
+
+commit 964d7465694202e42c41a8aba834e79c0edf153d
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 01:46:40 2014 +1100
+
+    finished the function that is used to extract the entries for multiline fields, also fixed a bug. not sure why it gave an extra value when using join() function.
+
+commit 9ae022c921bc9bab4f7e562d058869a2dcb28827
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sun Oct 26 01:22:28 2014 +1100
+
+    is able to find the right entries for multiline field. have not yet formatted the return string to be a joined string of all the entries. when using it, need to check for whether some symbols require unicode or not
+
+commit 8523b5b3acb0d1d935be76550a687932763420e3
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 22:37:14 2014 +1100
+
+    added a function for fields that only contain one item. this is so that when reading through the profile, if the database.pl program sees the beginning of a field, it will call the function oneItemfield() function to read the entry and return it, indentation at the front will be omitted. also began implementation for multiple item fields
+
+commit 8638e90011ae57c1e6e37f647c9270addd74b4d7
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 19:04:48 2014 +1100
+
+    able to corretly find the password for each user. also fixed a bug in accessing the folders. When using opendir, extra variables were made such as . and ..
+
+commit 904ae1e85398445b80026d9f93b5e899457ce456
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 18:13:46 2014 +1100
+
+    database.pl can now access all the usernames by reading throught the folder names in the students folder.
+
+commit 779144a591c36e3832efe769627808c5dea88135
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 17:31:08 2014 +1100
+
+    made changes to the README.md file. Keeping track of the files that are the updated versions.
+
+commit 102b0b7c88934914bcd32940efcf77c8160f758b
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 17:29:09 2014 +1100
+
+    database.py is now able to create a new table for storing usernames, names and passwords
+
+commit ba2cca4398e9486051e952ac0f9d312d8618c1b9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Sat Oct 25 17:19:32 2014 +1100
+
+    added database.pl. have encountered difficulties in initialising the database in python over the past few days. With the span of the due date, I believe there will not be enough time for learn the necessary python for the implementation for the later sets, therefore have decided to implement using perl. this file is used to make the database using sqlite3 again, but the code is in perl
+
+commit cb4cde303913e4213faff1ca0b687fe76486fc6a
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 24 15:34:50 2014 +1100
+
+    added some new resources found online for links.txt
+
+commit 2d069ceecca6f6f107c24b7985456c1c6a63410c
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 22 19:16:16 2014 +1100
+
+    added test1.py to try another version for initialising database. Encountering the issue of needing to continuously destory the table should the table be iniitalised already. will be studying tutorials further
+
+commit 65d26b9cb5bcfc72b61c410292468517273d0eb7
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 22 15:47:19 2014 +1100
+
+    updated database.py. Have learnt how open a file and then amatch an expression. ideally want to be able to read multiline regex. to create a table in sqlite.
+
+commit 0d1f619ce7e786d903f07827d375281c8f5233eb
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Wed Oct 22 14:07:56 2014 +1100
+
+    added database.py, file used to initialise the data save via sqlite. So far made sure the file compiles at least
+
+commit fb9cd3d3e016b5dbb31d889cc4d3e5b547cf4eba
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Tue Oct 21 22:55:07 2014 +1100
+
+    added a new file test.py for testing SQLite. Attempting to try and initialise the database from tutorials on SQLite
+
+commit 387feeca6335220d3b81c0c6e0f03a586ceac8f9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 17:30:57 2014 +1100
+
+    changed a few lines of code to try and test out some fo the functions in the source perl code
+
+commit 54a8c9e557c387753e448a5e88c76cf2027cb299
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 17:29:15 2014 +1100
+
+    deleted a file links.txt that was having issues with adding
+
+commit 82ff3482a05da63d7ea8c73b48aef28c5cbde2d2
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 17:24:37 2014 +1100
+
+    added an additional file links.txt for keeping track of online resources found for assignment, mostly on SQlite tutorials
+
+commit 39f9829682907d46594311501bbbf73d5c6ccfc1
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 17:21:43 2014 +1100
+
+    added a textfile to keep track of tutorials of where i find useful stuff, mostly on SQLite
+
+commit 58354f091d01d50d54d0256807a1344aaef73fdd
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 16:38:10 2014 +1100
+
+    starting point
+
+commit be0f00bdb882e38a5b37ee0f85c43e4c9a910f3f
+Merge: 9e13f32 4506fb9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 16:32:12 2014 +1100
+
+    updating the current repository Merge https://github.com/axura/koko
+
+commit 9e13f325f06294ea17d133392dfa5fc4b439fbb9
+Author: Yue Kang <ykan215@cse.unsw.EDU.AU>
+Date:   Fri Oct 17 16:31:12 2014 +1100
+
+    added file love2041.cgi for assignment 2, intending to code in python
+
+commit 4506fb9774fc7d1235e390a71bd19db41f4434d3
+Author: Yue (Alice) Kang <axura.07@gmail.com>
+Date:   Sat Oct 11 21:44:14 2014 +1100
+
+    Initial commit
