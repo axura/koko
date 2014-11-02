@@ -87,6 +87,9 @@ print &page_trailer();
 #exit 0;	
 
 #writes the html code for the welcome page after a user logs in
+#in addition, the function will also find any matching users for the current user
+#the set of users will be used to call display_matches(), used to display the results
+#directly underneath the welcome title
 sub login{
 	my $html_code = "";
 	$html_code .= page_title();
@@ -120,6 +123,10 @@ sub finding_match{
 	}
 }
 
+#function that finds the matches for the user. To be displayed when the user logs in. 
+#the gender preference will be retrieved from the preferences.txt from ther user database
+#it will be then compared with the gender of each user, and then those who match will be 
+#added to an array
 sub find_matches{
 	my $username = param('Username');
 	my $html_code = "";
@@ -134,16 +141,17 @@ sub find_matches{
 
 	@row = $sth->fetchrow_array();
 	$pre_gender = $row[0];
-#	$html_code .= "<center><p>$username prefers: $pre_gender</p></center>\n";
 
 	my @students = glob("$students_dir/*");
 	foreach my $student (@students){
 		$student =~ s/\.\/students\///ig;
 	}
 
-#	$html_code .= "<center><p><b>found matches:</b></p></center>\n";
-
 	foreach $student (@students){
+		if ($student eq $username){
+			next;
+		}
+
 		$stmt = qq(SELECT gender from USERS WHERE username="$student";);
 		$sth = $dbh->prepare( $stmt );	
 		$rv = $sth->execute() or die $DBI::errstr;
@@ -152,7 +160,6 @@ sub find_matches{
 		}
 		@row = $sth->fetchrow_array();
 		if ($pre_gender eq $row[0]){
-#			$html_code .= "<center><p>$student: $row[0]</p></center>\n";
 			push(@matches, $student);
 		}
 	}
@@ -161,7 +168,8 @@ sub find_matches{
 
 }
 
-
+#function that takes in the set of gender matches for the user and displays it
+#the format is similar to that of display_user and results
 sub display_matches{
 	my $html_code = "";
 	my @display_matches = @matches;
@@ -586,7 +594,6 @@ sub page_trailer {
 	my $html = "";
 	$html .= join("", map("<!-- $_=".param($_)." -->\n", param())) if $debug;
 	
-	#$html .= end_html;
 	$html .= "<script src=\"http://code.jquery.com/jquery.min.js\"></script>\n";
 	$html .= "<script src=\"js/bootstrap.min.js\"></script>\n";
 
