@@ -1,0 +1,29 @@
+<div class="container" align="middle">
+<div class="panel panel-default" style="width:500px">
+ <div class="panel-body">
+<form class="form-horizontal">
+  <fieldset>
+    <legend><center>Sign In</center></legend>
+    <p class="text-danger">Incorrect username or password</p>
+    <div class="form-group">
+      <label for="inputUser" class="col-lg-2 control-label">Username</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputUsername" placeholder="Username" name="Username">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+      <div class="col-lg-10">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="Password">
+      </div>
+    </div>  
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <centre><button type="submit" class="btn btn-primary">Submit</button></centre>
+      </div>
+    </div>
+  </fieldset>
+</form>
+</div>
+</div>	
+</div>
