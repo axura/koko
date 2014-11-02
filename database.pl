@@ -4,6 +4,7 @@
 #the database before running the CGI program to open the link.
 #This program will open a connection to a database, using SQL, it will insert in information
 #that is retrieved from the students folder profile and add it to the database
+#There are two tables,USERS (storing profile info) and PREFERENCES (matching references)
 #It will then save the changes to the database and close before running the cgi program
 #printing functions for debugging purposes and for checking the status have been commented out
 
@@ -54,6 +55,7 @@ if($rv < 0){
   # print "Table created successfully\n";
 #}
 
+#creating the database for story PREFERENCES
 $stmt = qq(CREATE TABLE PREFERENCES
       (ID INT PRIMARY KEY,
        username       				TEXT,
@@ -96,14 +98,7 @@ sub multiItemfield{
 	return $listOfEntries;
 }
 
-
-sub preferences{
-	my $entry = $line;
-	my $index = $file_index + 1;
-	
-	return $entry;
-}
-
+#finding the minimum value of a field with range
 sub findMin{
 	my $entry = $line;
 	my $index = $file_index + 2;
@@ -113,6 +108,7 @@ sub findMin{
 	return $entry;
 }
 
+#finding the maximum value of a field with range
 sub findMax{
 	my $entry = $line;
 	my $index = $file_index + 4;
@@ -133,7 +129,9 @@ sub findMax{
 #with the list of users given from the folder names. it will traverse through each folder, 
 #loop will open the profile.txt in each file, to read for the fields. 
 #Once it has found a new field, it will call the function to set the items as a string
-
+#the second part of the function will open the "preferences.txt", similarly will look
+#for the relevant fields and find their values, storing it into a concatted string before
+#pushing into an arrray. 
 
 foreach $user (@folders){
 	#check if it is a valid username, otherwise go to next folder
@@ -177,9 +175,13 @@ foreach $user (@folders){
 		$rv = $dbh->do($stmt) or die $DBI::errstr;
 	
 		
-#printf "%s: %s\n", $id_string, $value_string;
+	#printf "%s: %s\n", $id_string, $value_string;
 	close(File);
 
+
+
+#finding the preferences of each student. the username must be pushed manually into the array
+#as it is not shown in the file
 	%pre_entries = ();
 	$file_location = "students/".$user."/preferences.txt";
 	#strings passed into the insert instruciton for SQL
@@ -226,7 +228,6 @@ foreach $user (@folders){
 	$value_string = "'".$value_string."'";	
 	$stmt = qq(INSERT INTO PREFERENCES ($id_string) VALUES ($value_string ););
 	$rv = $dbh->do($stmt) or die $DBI::errstr;
-
 		
 	close File;	
 
